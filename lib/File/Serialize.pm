@@ -14,9 +14,15 @@ use Class::Load qw/ load_class /;
 use List::Util qw/ pairgrep first none any pairmap /;
 use Path::Tiny;
 
-use parent 'Exporter';
-
-our @EXPORT = qw/ serialize_file deserialize_file /;
+use Sub::Exporter -setup => {
+    exports => [
+        serialize_file   => \&build_serialize_file,
+        deserialize_file => \&build_deserialize_file,
+    ],
+    groups => {
+        default => [qw/ serialize_file deserialize_file /],
+    },
+};
 
 our %serializers = (
     yaml => {
@@ -41,32 +47,40 @@ our %serializers = (
     },
 );
 
-sub serialize_file {
-    my( $file, $content, $options, $format ) = @_;
+sub build_serialize_file {
+    my( $class, $name, $arg, $col ) = @_;
 
-    $file = path($file);
+    return sub {
+        my( $file, $content, $options, $format ) = @_;
 
-    my $serializer = _serializer($file, $options);
+        $file = path($file);
 
-    $options = map { $_->($options) }
-                  first { $_ }
-                  map( { $serializer->{$_} } qw/ serialize_options options / ), sub { +{} };
-    
-    $file->spew($serializer->{serialize}->($content, $options));
+        my $serializer = _serializer($file, $options);
+
+        $options = map { $_->($options) }
+                    first { $_ }
+                    map( { $serializer->{$_} } qw/ serialize_options options / ), sub { +{} };
+        
+        $file->spew($serializer->{serialize}->($content, $options));
+    }
 }
 
-sub deserialize_file {
-    my( $file, $options ) = @_;
+sub build_deserialize_file {
+    my( $class, $name, $arg, $col ) = @_;
 
-    $file = path($file);
+    return sub {
+        my( $file, $options ) = @_;
 
-    my $serializer = _serializer($file, $options);
+        $file = path($file);
 
-    $options = map { $_->($options) }
-                  first { $_ }
-                  map( { $serializer->{$_} } qw/ deserialize_options options / ), sub { +{} };
-    
-    return $serializer->{deserialize}->($file->slurp, $options);
+        my $serializer = _serializer($file, $options);
+
+        $options = map { $_->($options) }
+                    first { $_ }
+                    map( { $serializer->{$_} } qw/ deserialize_options options / ), sub { +{} };
+        
+        return $serializer->{deserialize}->($file->slurp, $options);
+    }
 }
 
 sub _serializer {
