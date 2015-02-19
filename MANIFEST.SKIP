@@ -1,6 +1,6 @@
 ^dist.ini
 ^MANIFEST.SKIP
-Path-Tiny-Serialize.*
+File-Serialize.*
 ^\.gitignore
 ^\.git
 ^\.build

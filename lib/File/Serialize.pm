@@ -207,10 +207,10 @@ our %serializers = (
 );
 
 sub _generate_serialize_file {
-    my( $class, $name, $args, $global )= @_;
+    my( undef, undef, undef, $global )= @_;
 
     return sub {
-        my( $file, $content, $options, $format ) = @_;
+        my( $file, $content, $options ) = @_;
 
         $options = { %$global, %{ $options||{} } } if $global;
 
@@ -227,7 +227,7 @@ sub _generate_serialize_file {
 }
 
 sub _generate_deserialize_file {
-    my( $class, $name, $args, $global ) = @_;
+    my( undef, undef, undef, $global ) = @_;
 
     return sub {
         my( $file, $options ) = @_;
