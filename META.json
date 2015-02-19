@@ -1,0 +1,74 @@
+{
+   "abstract" : "DWIM file serialization/deserialization",
+   "author" : [
+      "Yanick Champoux <yanick@cpan.org>"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Dist::Zilla version 5.031, CPAN::Meta::Converter version 2.142690",
+   "license" : [
+      "perl_5"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "File-Serialize",
+   "prereqs" : {
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "0"
+         }
+      },
+      "develop" : {
+         "requires" : {
+            "version" : "0.9901"
+         }
+      },
+      "runtime" : {
+         "requires" : {
+            "Class::Load" : "0",
+            "Exporter::Tiny" : "0",
+            "List::Util" : "0",
+            "Path::Tiny" : "0",
+            "parent" : "0",
+            "strict" : "0",
+            "warnings" : "0"
+         }
+      },
+      "test" : {
+         "requires" : {
+            "File::Spec" : "0",
+            "IO::Handle" : "0",
+            "IPC::Open3" : "0",
+            "Test::Exception" : "0",
+            "Test::More" : "0.88",
+            "Test::Requires" : "0",
+            "perl" : "5.006"
+         }
+      }
+   },
+   "provides" : {
+      "File::Serialize" : {
+         "file" : "lib/File/Serialize.pm",
+         "version" : "v0.0.1"
+      }
+   },
+   "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/yanick/File-Serialize/issues"
+      },
+      "homepage" : "https://github.com/yanick/File-Serialize",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/yanick/File-Serialize.git",
+         "web" : "https://github.com/yanick/File-Serialize"
+      }
+   },
+   "version" : "0.0.1",
+   "x_author_pledge" : {
+      "version" : 1
+   },
+   "x_authority" : "cpan:YANICK"
+}
+

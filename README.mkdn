@@ -1,0 +1,158 @@
+# NAME
+
+File::Serialize - DWIM file serialization/deserialization
+
+# VERSION
+
+version 0.0.1
+
+# SYNOPSIS
+
+    use File::Serialize { pretty => 1 };
+
+    my $data = { foo => 'bar' };
+
+    serialize_file '/path/to/file.json' => $data;
+
+    ...;
+
+    $data_copy = deserialize_file '/path/to/file.json';
+
+# DESCRIPTION
+
+_File::Serialize_ provides a common, simple interface to
+file serialization -- you provide the file path, the data to serialized, and 
+the module takes care of the rest. Even the serialization format, unless 
+specified
+explicitly as part of the options, is detected from the file extension.
+
+# IMPORT
+
+_File::Serialize_ imports the two functions 
+`serialize_file` and `deserialize_file` into the current namespace.
+A default set of options can be set for both by passing a hashref as
+an argument to the 'use' statement.
+
+    use File::Serialize { pretty => 1 };
+
+# SUPPORTED SERIALIZERS
+
+## YAML
+
+- extensions
+
+    yaml, yml
+
+- module used
+
+    [YAML](https://metacpan.org/pod/YAML)
+
+- supported options
+
+    None
+
+## JSON
+
+- extensions
+
+    json, js
+
+- module used
+
+    [JSON::MaybeXS](https://metacpan.org/pod/JSON::MaybeXS)
+
+- supported options
+
+    pretty
+
+## TOML
+
+- extensions
+
+    toml 
+
+- module used
+
+    [TOML](https://metacpan.org/pod/TOML)
+
+- supported options
+
+    None
+
+# OPTIONS
+
+_File::Serialize_ recognizes a set of options that, if applicable,
+will be passed to the serializer.
+
+- format => $serializer
+
+    Explicitly provides the serializer to use.
+
+        my $data = deserialize_file $path, { format => 'json' };
+
+- pretty => $boolean
+
+    The serialization will be formatted for human consumption.
+
+# FUNCTIONS
+
+## serialize\_file $path, $data, $options
+
+    my $data = { foo => 'bar' };
+
+    serialize_file '/path/to/file.json' => $data;
+
+## deserialize\_file $path, $options
+
+    my $data = deserialize_file '/path/to/file.json';
+
+# ADDING A SERIALIZER
+
+    $File::Serialize::serializers{'MySerializer'} = {
+        extensions => [ 'myser' ],
+        init => 'My::Serializer',
+        serialize   => sub { my($data,$options) = @_; ...; },
+        deserialize => sub { my($data,$options) = @_; ...; },
+        options => sub { my( $raw_options, $serialize ) = @_; ...; },
+    };
+
+Serializers can be added via the `$File::Serialize::serializers` hash. 
+The key is the name of the serializer, and the value is an hashref of its
+configuration parameters, which can be:
+
+- extensions
+
+    Arrayref of the file extensions associated with this serializer.
+    The first extension is considered to be the canonical extension 
+    for this serialization format.
+
+- init 
+
+    Optional. A module to source when this serializer is used.
+
+- serialize
+
+    The serialization function to use. Will receive the data structure and the groomed
+    options as arguments, is expected to return the serialized data.
+
+- deserialize
+
+    The deserialization function to use. Will receive the serialized data and the groomed
+    options as arguments, is expected to return the deserialized data structure.
+
+- options 
+
+    Function that takes the options as passed to `serialize_file`/`deserialize_file` 
+    and convert them to something palatable to the current serializer. Gets the raw options
+    and a `is_serialize` boolean (will be `1` for a serializer call, `undef` for the deserializer).
+
+# AUTHOR
+
+Yanick Champoux <yanick@cpan.org> [![endorse](http://api.coderwall.com/yanick/endorsecount.png)](http://coderwall.com/yanick)
+
+# COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2015 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
