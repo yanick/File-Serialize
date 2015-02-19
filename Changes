@@ -1,5 +1,21 @@
 Revision history for File-Serialize
 
 {{$NEXT}}
+ [API CHANGES]
 
-  - First version, unleashed on an unsuspecting world.
+ [BUG FIXES]
+
+ [DOCUMENTATION]
+
+ [ENHANCEMENTS]
+
+ [NEW FEATURES]
+
+ [STATISTICS]
+
+0.0.1 2015-02-18
+ - First version, unleashed on an unsuspecting world.
+
+ [STATISTICS]
+ - code churn: 6 files changed, 35 insertions(+), 7 deletions(-)
+
