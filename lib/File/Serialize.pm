@@ -53,6 +53,9 @@ sub _generate_serialize_file {
 
         my $serializer = _serializer($file, $options);
 
+        $file = path( join '.', $file, $serializer->{extensions}[0] )
+            if $options->{add_extension};
+
         $options = $_->($options, 1) for
                     first { $_ }
                     map( { $serializer->{$_} } qw/ options / ), sub { +{} };
@@ -72,6 +75,9 @@ sub _generate_deserialize_file {
         $options = { %$global, %{ $options||{} } } if $global;
 
         my $serializer = _serializer($file, $options);
+
+        $file = path( join '.', $file, $serializer->{extensions}[0] )
+            if $options->{add_extension};
 
         ($options) = map { $_->($options) }
                     first { $_ }
