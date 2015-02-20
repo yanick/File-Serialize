@@ -14,13 +14,11 @@ doap.xml
 lib/File/Serialize.pm
 t/00-compile.t
 t/000-report-versions-tiny.t
+t/add_extension.t
 t/basic.t
 t/corpus/foo.json
 t/corpus/foo.toml
 t/corpus/foo.yml
 t/corpus/mystery
-t/corpus/time.json
-t/corpus/time.toml
-t/corpus/time.yml
 t/defaults.t
 xt/release/unused-vars.t
