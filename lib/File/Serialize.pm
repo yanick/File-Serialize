@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use Class::Load qw/ load_class /;
-use List::Util qw/ pairgrep first none any pairmap /;
+use List::Util 1.41 qw/ pairgrep first none any pairmap /;
 use Path::Tiny;
 
 use parent 'Exporter::Tiny';

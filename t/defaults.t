@@ -2,7 +2,7 @@ use strict;
 
 use Test::More tests => 3;
 
-use Test::Requires { 'JSON::MaybeXS' };
+use Test::Requires 'JSON::MaybeXS';
 
 use Path::Tiny;
 
