@@ -1,6 +1,9 @@
 package File::Serialize;
+BEGIN {
+  $File::Serialize::AUTHORITY = 'cpan:YANICK';
+}
 # ABSTRACT: DWIM file serialization/deserialization
-
+$File::Serialize::VERSION = '0.1.0';
 use strict;
 use warnings;
 
@@ -109,3 +112,199 @@ sub _serializer {
 }
 
 1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+File::Serialize - DWIM file serialization/deserialization
+
+=head1 VERSION
+
+version 0.1.0
+
+=head1 SYNOPSIS
+
+    use File::Serialize { pretty => 1 };
+
+    my $data = { foo => 'bar' };
+
+    serialize_file '/path/to/file.json' => $data;
+
+    ...;
+
+    $data_copy = deserialize_file '/path/to/file.json';
+
+=head1 DESCRIPTION
+
+I<File::Serialize> provides a common, simple interface to
+file serialization -- you provide the file path, the data to serialized, and 
+the module takes care of the rest. Even the serialization format, unless 
+specified
+explicitly as part of the options, is detected from the file extension.
+
+=head1 IMPORT
+
+I<File::Serialize> imports the two functions 
+C<serialize_file> and C<deserialize_file> into the current namespace.
+A default set of options can be set for both by passing a hashref as
+an argument to the 'use' statement.
+
+    use File::Serialize { pretty => 1 };
+
+=head1 SUPPORTED SERIALIZERS
+
+=head2 YAML
+
+=over
+
+=item extensions
+
+yaml, yml
+
+=item module used
+
+L<YAML>
+
+=item supported options
+
+None
+
+=back
+
+=head2 JSON
+
+=over
+
+=item extensions
+
+json, js
+
+=item module used
+
+L<JSON::MaybeXS>
+
+=item supported options
+
+pretty
+
+=back
+
+=head2 TOML
+
+=over
+
+=item extensions
+
+toml 
+
+=item module used
+
+L<TOML>
+
+=item supported options
+
+None
+
+=back
+
+=head1 OPTIONS
+
+I<File::Serialize> recognizes a set of options that, if applicable,
+will be passed to the serializer.
+
+=over
+
+=item format => $serializer
+
+Explicitly provides the serializer to use.
+
+    my $data = deserialize_file $path, { format => 'json' };
+
+=item add_extension => $boolean
+
+If true, the canonical extension of the serializing format will be 
+appended to the file. Requires the parameter C<format> to be given as well.
+
+    # will create 'foo.yml', 'foo.json' and 'foo.toml'
+    serialize_file 'foo', $data, { format => $_, add_extension => 1 } 
+        for qw/ yaml json toml /;
+
+=item pretty => $boolean
+
+The serialization will be formatted for human consumption.
+
+=back
+
+=head1 FUNCTIONS
+
+=head2 serialize_file $path, $data, $options
+
+    my $data = { foo => 'bar' };
+
+    serialize_file '/path/to/file.json' => $data;
+
+=head2 deserialize_file $path, $options
+
+    my $data = deserialize_file '/path/to/file.json';
+
+=head1 ADDING A SERIALIZER
+
+    $File::Serialize::serializers{'MySerializer'} = {
+        extensions => [ 'myser' ],
+        init => 'My::Serializer',
+        serialize   => sub { my($data,$options) = @_; ...; },
+        deserialize => sub { my($data,$options) = @_; ...; },
+        options => sub { my( $raw_options, $serialize ) = @_; ...; },
+    };
+
+Serializers can be added via the C<$File::Serialize::serializers> hash. 
+The key is the name of the serializer, and the value is an hashref of its
+configuration parameters, which can be:
+
+=over
+
+=item extensions
+
+Arrayref of the file extensions associated with this serializer.
+The first extension is considered to be the canonical extension 
+for this serialization format.
+
+=item init 
+
+Optional. A module to source when this serializer is used.
+
+=item serialize
+
+The serialization function to use. Will receive the data structure and the groomed
+options as arguments, is expected to return the serialized data.
+
+=item deserialize
+
+The deserialization function to use. Will receive the serialized data and the groomed
+options as arguments, is expected to return the deserialized data structure.
+
+=item options 
+
+Function that takes the options as passed to C<serialize_file>/C<deserialize_file> 
+and convert them to something palatable to the current serializer. Gets the raw options
+and a C<is_serialize> boolean (will be C<1> for a serializer call, C<undef> for the deserializer).
+
+=back
+
+=head1 AUTHOR
+
+Yanick Champoux <yanick@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2015 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

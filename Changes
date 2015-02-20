@@ -1,18 +1,11 @@
 Revision history for File-Serialize
 
-{{$NEXT}}
- [API CHANGES]
-
- [BUG FIXES]
-
- [DOCUMENTATION]
-
+0.1.0 2015-02-19
  [ENHANCEMENTS]
  - adding 'add_extension'.
 
- [NEW FEATURES]
-
  [STATISTICS]
+ - code churn: 10 files changed, 235 insertions(+), 177 deletions(-)
 
 0.0.1 2015-02-18
  - First version, unleashed on an unsuspecting world.

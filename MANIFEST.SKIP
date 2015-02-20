@@ -1,7 +1,0 @@
-^dist.ini
-^MANIFEST.SKIP
-File-Serialize.*
-^\.gitignore
-^\.git
-^\.build
-
