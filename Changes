@@ -8,6 +8,7 @@ Revision history for File-Serialize
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
+ - Change YAML for YAML::Tiny.
 
  [NEW FEATURES]
 

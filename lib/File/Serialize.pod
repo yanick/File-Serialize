@@ -40,7 +40,7 @@ yaml, yml
 
 =item module used
 
-L<YAML>
+L<YAML::Tiny>
 
 =item supported options
 

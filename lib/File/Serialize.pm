@@ -15,9 +15,9 @@ our @EXPORT = qw/ serialize_file deserialize_file /;
 our %serializers = (
     YAML => {
         extensions => [ 'yml', 'yaml' ],  # first extension is the canonical one
-        init => 'YAML',
-        serialize   => sub { YAML::Dump(shift) },  # arguments: $data, $options
-        deserialize => sub { YAML::Load(shift) },  # arguments: $data, $options
+        init => 'YAML::Tiny',
+        serialize   => sub { YAML::Tiny->new(shift)->write_string },  # arguments: $data, $options
+        deserialize => sub { YAML::Tiny->new->read_string(shift)->[0] },  # arguments: $data, $options
     },
     JSON => {
         extensions => [ 'json', 'js' ],
