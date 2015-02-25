@@ -1,19 +1,12 @@
 Revision history for File-Serialize
 
-{{$NEXT}}
- [API CHANGES]
-
- [BUG FIXES]
-
- [DOCUMENTATION]
-
+0.2.0 2015-02-25
  [ENHANCEMENTS]
  - Change YAML for YAML::Tiny.
  - Add option 'canonical'.
 
- [NEW FEATURES]
-
  [STATISTICS]
+ - code churn: 3 files changed, 21 insertions(+), 7 deletions(-)
 
 0.1.0 2015-02-19
  [ENHANCEMENTS]
