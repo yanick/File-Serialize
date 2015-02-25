@@ -9,6 +9,7 @@ Revision history for File-Serialize
 
  [ENHANCEMENTS]
  - Change YAML for YAML::Tiny.
+ - Add option 'canonical'.
 
  [NEW FEATURES]
 

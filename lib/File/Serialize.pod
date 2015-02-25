@@ -62,7 +62,7 @@ L<JSON::MaybeXS>
 
 =item supported options
 
-pretty
+pretty, canonical
 
 =back
 
@@ -109,6 +109,10 @@ appended to the file. Requires the parameter C<format> to be given as well.
 =item pretty => $boolean
 
 The serialization will be formatted for human consumption.
+
+=item canonical => $boolean
+
+Serializes the data using its canonical representation.
 
 =back
 

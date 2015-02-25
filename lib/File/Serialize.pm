@@ -26,7 +26,9 @@ our %serializers = (
             # arguments $options, $serialize
             my $options = shift; 
             my %groomed;
-            $groomed{pretty} = $options->{pretty} if defined $options->{pretty};
+            for my $k( qw/ pretty canonical / ) {
+                $groomed{$k} = $options->{$k} if defined $options->{$k};
+            }
 
             return \%groomed;
         },
