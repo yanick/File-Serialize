@@ -1,18 +1,11 @@
 Revision history for File-Serialize
 
-{{$NEXT}}
- [API CHANGES]
-
- [BUG FIXES]
-
- [DOCUMENTATION]
-
+0.3.0 2015-03-16
  [ENHANCEMENTS]
  - Added 'transerialize_file'. For the lulz.
 
- [NEW FEATURES]
-
  [STATISTICS]
+ - code churn: 5 files changed, 237 insertions(+), 5 deletions(-)
 
 0.2.0 2015-02-25
  [ENHANCEMENTS]

@@ -1,0 +1,223 @@
+NAME
+    File::Serialize - DWIM file serialization/deserialization
+
+VERSION
+    version 0.3.0
+
+SYNOPSIS
+        use File::Serialize { pretty => 1 };
+
+        my $data = { foo => 'bar' };
+
+        serialize_file '/path/to/file.json' => $data;
+
+        ...;
+
+        $data_copy = deserialize_file '/path/to/file.json';
+
+DESCRIPTION
+    *File::Serialize* provides a common, simple interface to file
+    serialization -- you provide the file path, the data to serialized, and
+    the module takes care of the rest. Even the serialization format, unless
+    specified explicitly as part of the options, is detected from the file
+    extension.
+
+IMPORT
+    *File::Serialize* imports the three functions "serialize_file",
+    "deserialize_file" and "transerialize_file" into the current namespace.
+    A default set of options can be set for both by passing a hashref as an
+    argument to the 'use' statement.
+
+        use File::Serialize { pretty => 1 };
+
+SUPPORTED SERIALIZERS
+  YAML
+    extensions
+        yaml, yml
+
+    module used
+        YAML::Tiny
+
+    supported options
+        None
+
+  JSON
+    extensions
+        json, js
+
+    module used
+        JSON::MaybeXS
+
+    supported options
+        pretty, canonical
+
+  TOML
+    extensions
+        toml
+
+    module used
+        TOML
+
+    supported options
+        None
+
+OPTIONS
+    *File::Serialize* recognizes a set of options that, if applicable, will
+    be passed to the serializer.
+
+    format => $serializer
+        Explicitly provides the serializer to use.
+
+            my $data = deserialize_file $path, { format => 'json' };
+
+    add_extension => $boolean
+        If true, the canonical extension of the serializing format will be
+        appended to the file. Requires the parameter "format" to be given as
+        well.
+
+            # will create 'foo.yml', 'foo.json' and 'foo.toml'
+            serialize_file 'foo', $data, { format => $_, add_extension => 1 } 
+                for qw/ yaml json toml /;
+
+    pretty => $boolean
+        The serialization will be formatted for human consumption.
+
+    canonical => $boolean
+        Serializes the data using its canonical representation.
+
+FUNCTIONS
+  serialize_file $path, $data, $options
+        my $data = { foo => 'bar' };
+
+        serialize_file '/path/to/file.json' => $data;
+
+  deserialize_file $path, $options
+        my $data = deserialize_file '/path/to/file.json';
+
+  transerialize_file $input, @transformation_chain
+    "transerialize_file" is a convenient wrapper that allows you to
+    deserialize a file, apply any number of transformations to its content
+    and re-serialize the result.
+
+    $input can be a filename, a Path::Tiny object or the raw data structure
+    to be worked on.
+
+        transerialize_file 'foo.json' => 'foo.yaml';
+    
+        # equivalent to
+        serialize_file 'foo.yaml' => deserialize_file 'foo.json'
+
+    Each element of the @transformation_chain can be
+
+    $coderef
+        A transformation step. The current data is available both via $_ and
+        as the first argument to the sub, and the transformed data is going
+        to be whatever the sub returns.
+
+            my $data = {
+                tshirt => { price => 18 },
+                hoodie => { price => 50 },
+            };
+
+            transerialize_file $data => sub {
+                my %inventory = %$_;
+
+                +{ %inventory{ grep { $inventory{$_}{price} <= 20 } keys %inventory } }
+
+            } => 'inexpensive.json';
+
+            # chaining transforms
+            transerialize_file $data 
+                => sub { 
+                    my %inventory = %$_; 
+                    +{ map { $_ => $inventory{$_}{price} } keys %inventory } }
+                => sub {
+                    my %inventory = %$_;
+                    +{ %inventory{ grep { $inventory{$_} <= 20 } keys %inventory } }
+                } => 'inexpensive.json';
+
+            # same as above, but with Perl 5.20 signatures and List::Util pair*
+            # helpers
+            transerialize_file $data 
+                => sub($inventory) { +{ pairmap  { $a => $b->{price} } %$inventory } }
+                => sub($inventory) { +{ pairgrep { $b <= 20 }          %$inventory } } 
+                => 'inexpensive.json';
+
+    \%destinations
+        A hashref of destination file with their options. The current state
+        of the data will be serialized to those destination. If no options
+        need to be passed, the value can be "undef".
+
+            transerialize_file $data => { 
+                'beginning.json' => { pretty => 1 },
+                'beginning.yml'  => undef
+            } => sub { ... } => {
+                'end.json' => { pretty => 1 },
+                'end.yml'  => undef
+            };
+
+    [ \@subchain1, \@subchain2, ... ]
+        Run the subchains given in @branches on the current data. Must be
+        the last step of the chain.
+
+            my @data = 1..10;
+
+            transerialize_file \@data 
+                => { 'all.json' => undef }
+                => [
+                   [ sub { [ grep { $_ % 2 } @$_ ] }     => 'odd.json'  ],
+                   [ sub { [ grep { not $_ % 2 } @$_ ] } => 'even.json' ],
+                ];
+
+    ( $filename, $options )
+        Has to be the final step(s) of the chain. Just like the arguments of
+        "serialize_file". $filename can be a string or a Path::Tiny object.
+        $options is optional.
+
+ADDING A SERIALIZER
+        $File::Serialize::serializers{'MySerializer'} = {
+            extensions => [ 'myser' ],
+            init => 'My::Serializer',
+            serialize   => sub { my($data,$options) = @_; ...; },
+            deserialize => sub { my($data,$options) = @_; ...; },
+            options => sub { my( $raw_options, $serialize ) = @_; ...; },
+        };
+
+    Serializers can be added via the $File::Serialize::serializers hash. The
+    key is the name of the serializer, and the value is an hashref of its
+    configuration parameters, which can be:
+
+    extensions
+        Arrayref of the file extensions associated with this serializer. The
+        first extension is considered to be the canonical extension for this
+        serialization format.
+
+    init
+        Optional. A module to source when this serializer is used.
+
+    serialize
+        The serialization function to use. Will receive the data structure
+        and the groomed options as arguments, is expected to return the
+        serialized data.
+
+    deserialize
+        The deserialization function to use. Will receive the serialized
+        data and the groomed options as arguments, is expected to return the
+        deserialized data structure.
+
+    options
+        Function that takes the options as passed to
+        "serialize_file"/"deserialize_file" and convert them to something
+        palatable to the current serializer. Gets the raw options and a
+        "is_serialize" boolean (will be 1 for a serializer call, "undef" for
+        the deserializer).
+
+AUTHOR
+    Yanick Champoux <yanick@cpan.org>
+
+COPYRIGHT AND LICENSE
+    This software is copyright (c) 2015 by Yanick Champoux.
+
+    This is free software; you can redistribute it and/or modify it under
+    the same terms as the Perl 5 programming language system itself.
+
