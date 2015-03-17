@@ -1,6 +1,10 @@
 package File::Serialize;
 # ABSTRACT: DWIM file serialization/deserialization
 
+use 5.16.0;
+
+use feature 'current_sub';
+
 use strict;
 use warnings;
 
@@ -10,7 +14,7 @@ use Path::Tiny;
 
 use parent 'Exporter::Tiny';
 
-our @EXPORT = qw/ serialize_file deserialize_file /;
+our @EXPORT = qw/ serialize_file deserialize_file transerialize_file /;
 
 our %serializers = (
     YAML => {
@@ -86,6 +90,44 @@ sub _generate_deserialize_file {
                     map( { $serializer->{$_} } qw/ options / ), sub { +{} };
         
         return $serializer->{deserialize}->($file->slurp, $options);
+    }
+}
+
+sub _generate_transerialize_file {
+
+    my $serialize_file = _generate_serialize_file(@_);
+    my $deserialize_file = _generate_deserialize_file(@_);
+
+
+    return sub {
+        my( $in, @chain ) = @_;
+        my $data = ref($in) ? $in : $deserialize_file->($in);
+
+        while( my $step = shift @chain) {
+            if ( ref $step eq 'CODE' ) {
+                local $_ = $data;
+                $data = $step->($data);
+            }
+            elsif ( ref $step eq 'ARRAY' ) {
+                die "subranch step can only be the last step of the chain"
+                    if @chain;
+                for my $branch( @$step ) {
+                    __SUB__->($data,@$branch);
+                }
+            }
+            elsif ( not ref $step or ref($step) =~ /Path::Tiny/ ) {
+                die "filename '$step' not at the end of the chain"
+                    unless @chain <= 1;
+
+                $serialize_file->(  $step, $data, shift @chain );
+            }
+            elsif ( ref $step eq 'HASH' ) {
+                while( my ($f,$o) = each %$step ) {
+                    $serialize_file->($f,$data,$o);
+                }
+            }
+        }
+
     }
 }
 
