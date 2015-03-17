@@ -21,8 +21,8 @@ explicitly as part of the options, is detected from the file extension.
 
 =head1 IMPORT
 
-I<File::Serialize> imports the two functions 
-C<serialize_file> and C<deserialize_file> into the current namespace.
+I<File::Serialize> imports the three functions 
+C<serialize_file>, C<deserialize_file> and C<transerialize_file> into the current namespace.
 A default set of options can be set for both by passing a hashref as
 an argument to the 'use' statement.
 
@@ -127,6 +127,97 @@ Serializes the data using its canonical representation.
 =head2 deserialize_file $path, $options
 
     my $data = deserialize_file '/path/to/file.json';
+
+=head2 transerialize_file $input, @transformation_chain
+
+C<transerialize_file> is a convenient wrapper that allows you to
+deserialize a file, apply any number of transformations to its 
+content and re-serialize the result.
+
+C<$input> can be a filename, a L<Path::Tiny> object or the raw data 
+structure to be worked on.
+
+    transerialize_file 'foo.json' => 'foo.yaml';
+    
+    # equivalent to
+    serialize_file 'foo.yaml' => deserialize_file 'foo.json'
+
+Each element of the C<@transformation_chain> can be
+
+=over
+
+=item $coderef
+
+A transformation step. The current data is available both via C<$_> and
+as the first argument to the sub,
+and the transformed data is going to be whatever the sub returns.
+
+    my $data = {
+        tshirt => { price => 18 },
+        hoodie => { price => 50 },
+    };
+
+    transerialize_file $data => sub {
+        my %inventory = %$_;
+
+        +{ %inventory{ grep { $inventory{$_}{price} <= 20 } keys %inventory } }
+
+    } => 'inexpensive.json';
+
+    # chaining transforms
+    transerialize_file $data 
+        => sub { 
+            my %inventory = %$_; 
+            +{ map { $_ => $inventory{$_}{price} } keys %inventory } }
+        => sub {
+            my %inventory = %$_;
+            +{ %inventory{ grep { $inventory{$_} <= 20 } keys %inventory } }
+        } => 'inexpensive.json';
+
+    # same as above, but with Perl 5.20 signatures and List::Util pair*
+    # helpers
+    transerialize_file $data 
+        => sub($inventory) { +{ pairmap  { $a => $b->{price} } %$inventory } }
+        => sub($inventory) { +{ pairgrep { $b <= 20 }          %$inventory } } 
+        => 'inexpensive.json';
+
+=item \%destinations
+
+A hashref of destination file with their options. The current state of the data will
+be serialized to those destination. If no options need to be passed, the 
+value can be C<undef>.
+
+    transerialize_file $data => { 
+        'beginning.json' => { pretty => 1 },
+        'beginning.yml'  => undef
+    } => sub { ... } => {
+        'end.json' => { pretty => 1 },
+        'end.yml'  => undef
+    };
+
+=item [ \@subchain1, \@subchain2, ... ] 
+
+Run the subchains given in C<@branches> on the current data. Must be the last
+step of the chain.
+
+    my @data = 1..10;
+
+    transerialize_file \@data 
+        => { 'all.json' => undef }
+        => [
+           [ sub { [ grep { $_ % 2 } @$_ ] }     => 'odd.json'  ],
+           [ sub { [ grep { not $_ % 2 } @$_ ] } => 'even.json' ],
+        ];
+
+
+=item ( $filename, $options )
+
+Has to be the final step(s) of the chain. Just like the arguments
+of C<serialize_file>. C<$filename> can be a string or a L<Path::Tiny> object.
+C<$options> is optional.
+
+=back
+
 
 =head1 ADDING A SERIALIZER
 
