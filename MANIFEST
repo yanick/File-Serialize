@@ -21,4 +21,5 @@ t/corpus/foo.toml
 t/corpus/foo.yml
 t/corpus/mystery
 t/defaults.t
+t/transerialize.t
 xt/release/unused-vars.t
