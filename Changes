@@ -8,11 +8,17 @@ Revision history for File-Serialize
  [DOCUMENTATION]
 
  [ENHANCEMENTS]
- - Use utf8 slurp/spew by default now. (GH#1, genehack)
 
  [NEW FEATURES]
 
  [STATISTICS]
+
+0.4.0 2015-03-18
+ [ENHANCEMENTS]
+ - Use utf8 slurp/spew by default now. (GH#1, genehack)
+
+ [STATISTICS]
+ - code churn: 10 files changed, 65 insertions(+), 12 deletions(-)
 
 0.3.0 2015-03-16
  [ENHANCEMENTS]
