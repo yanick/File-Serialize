@@ -84,6 +84,9 @@ sub _generate_deserialize_file {
         $file = path($file);
 
         $options = { %$global, %{ $options||{} } } if $global;
+        $options->{utf8} //= 1;
+
+        my $method = 'slurp' . ( '_utf8' ) x !! $options->{utf8};
 
         my $serializer = _serializer($file, $options);
 
@@ -93,8 +96,8 @@ sub _generate_deserialize_file {
         ($options) = map { $_->($options) }
                     first { $_ }
                     map( { $serializer->{$_} } qw/ options / ), sub { +{} };
-        
-        return $serializer->{deserialize}->($file->slurp_utf8, $options);
+
+        return $serializer->{deserialize}->($file->$method, $options);
     }
 }
 
