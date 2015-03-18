@@ -7,7 +7,7 @@ use Test::Requires 'JSON::MaybeXS';
 use Path::Tiny;
 
 my $file;
-sub Path::Tiny::spew { $file = $_[1]; }
+sub Path::Tiny::spew_utf8 { $file = $_[1]; }
 
 {
     package Foo;

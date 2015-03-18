@@ -1,4 +1,5 @@
 AUTHOR_PLEDGE
+CONTRIBUTORS
 Changes
 INSTALL
 LICENSE
@@ -22,4 +23,5 @@ t/corpus/foo.yml
 t/corpus/mystery
 t/defaults.t
 t/transerialize.t
+t/utf8.t
 xt/release/unused-vars.t

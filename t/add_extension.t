@@ -20,7 +20,7 @@ serialize_file 't/corpus/add_ext' => { a => 'b' };
 my $file = path('t/corpus/add_ext.yml');
 
 ok $file->exists, 'the right file is created';
-like $file->slurp => qr/a:\s+b/, 'has the right content';
+like $file->slurp_utf8 => qr/a:\s+b/, 'has the right content';
 
 is_deeply deserialize_file( 't/corpus/add_ext' ), { a => 'b' }, 
     "can deserialize too";

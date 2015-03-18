@@ -7,9 +7,11 @@ use File::Serialize { canonical => 1};
 
 my %file;
 use Path::Tiny;
-sub Path::Tiny::spew { $file{$_[0]} = $_[1]; }
-sub Path::Tiny::slurp { $file{$_[0]} }
-
+{
+  no warnings 'redefine';
+  sub Path::Tiny::spew_utf8 { $file{$_[0]} = $_[1]; }
+  sub Path::Tiny::slurp_utf8 { $file{$_[0]} }
+}
 my $data = [ { alpha => 1 }, { beta => 2 } ];
 
 serialize_file 'foo.json' => $data;
@@ -29,7 +31,7 @@ $data = {
 
 transerialize_file $data => sub {
     my %inventory = %$_;
-    +{ %inventory{ grep { $inventory{$_}{price} <= 20 } keys %inventory } }
+    +{ map { $_ => $inventory{$_} } grep { $inventory{$_}{price} <= 20 } keys %inventory }
 } => 'inexpensive.json';
 
 is_deeply deserialize_file('inexpensive.json') =>  {
@@ -43,7 +45,7 @@ transerialize_file $data
         +{ map { $_ => $inventory{$_}{price} } keys %inventory } }
     => sub {
         my %inventory = %$_;
-        +{ %inventory{ grep { $inventory{$_} <= 20 } keys %inventory } }
+        +{ map { $_ => $inventory{$_} } grep { $inventory{$_} <= 20 } keys %inventory } 
     } => 'inexpensive.json';
 
 is_deeply deserialize_file('inexpensive.json') =>  {
