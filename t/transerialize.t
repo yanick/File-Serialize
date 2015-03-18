@@ -31,7 +31,7 @@ $data = {
 
 transerialize_file $data => sub {
     my %inventory = %$_;
-    +{ %inventory{ grep { $inventory{$_}{price} <= 20 } keys %inventory } }
+    +{ map { $_ => $inventory{$_} } grep { $inventory{$_}{price} <= 20 } keys %inventory }
 } => 'inexpensive.json';
 
 is_deeply deserialize_file('inexpensive.json') =>  {
@@ -45,7 +45,7 @@ transerialize_file $data
         +{ map { $_ => $inventory{$_}{price} } keys %inventory } }
     => sub {
         my %inventory = %$_;
-        +{ %inventory{ grep { $inventory{$_} <= 20 } keys %inventory } }
+        +{ map { $_ => $inventory{$_} } grep { $inventory{$_} <= 20 } keys %inventory } 
     } => 'inexpensive.json';
 
 is_deeply deserialize_file('inexpensive.json') =>  {
