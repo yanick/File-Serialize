@@ -8,7 +8,7 @@ use File::Serialize { canonical => 1};
 my %file;
 use Path::Tiny;
 sub Path::Tiny::spew_utf8 { $file{$_[0]} = $_[1]; }
-sub Path::Tiny::slurp { $file{$_[0]} }
+sub Path::Tiny::slurp_utf8 { $file{$_[0]} }
 
 my $data = [ { alpha => 1 }, { beta => 2 } ];
 

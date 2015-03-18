@@ -94,7 +94,7 @@ sub _generate_deserialize_file {
                     first { $_ }
                     map( { $serializer->{$_} } qw/ options / ), sub { +{} };
         
-        return $serializer->{deserialize}->($file->slurp, $options);
+        return $serializer->{deserialize}->($file->slurp_utf8, $options);
     }
 }
 

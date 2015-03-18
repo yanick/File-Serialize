@@ -37,5 +37,5 @@ subtest "explicit format" => sub {
 
     serialize_file 't/corpus/mystery' => [1..5], { format => 'yaml' };
 
-    like path('t/corpus/mystery')->slurp => qr'- 1', 'right format';
+    like path('t/corpus/mystery')->slurp_utf8 => qr'- 1', 'right format';
 };
