@@ -54,8 +54,12 @@ sub _generate_serialize_file {
         my( $file, $content, $options ) = @_;
 
         $options = { %$global, %{ $options||{} } } if $global;
+        # default to utf8 => 1
+        $options->{utf8} //= 1;
 
         $file = path($file);
+
+        my $method = $options->{utf8} ? 'spew_utf8' : 'spew';
 
         my $serializer = _serializer($file, $options);
 
@@ -66,7 +70,8 @@ sub _generate_serialize_file {
                     first { $_ }
                     map( { $serializer->{$_} } qw/ options / ), sub { +{} };
         
-        $file->spew($serializer->{serialize}->($content, $options));
+
+        $file->$method($serializer->{serialize}->($content, $options));
     }
 }
 

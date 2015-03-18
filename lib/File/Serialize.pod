@@ -114,6 +114,14 @@ The serialization will be formatted for human consumption.
 
 Serializes the data using its canonical representation.
 
+=item utf8 => $boolean
+
+If set, file will be written out using L<Path::Tiny>'s C<spew_utf8>
+method ( which sets a C<binmode> of C<:encoding(UTF-8)>). Otherwise,
+L<Path::Tiny>'s C<spew> method is used.
+
+Defaults to being set, because, after all, it is 2015.
+
 =back
 
 =head1 FUNCTIONS
