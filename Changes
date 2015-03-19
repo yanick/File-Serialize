@@ -6,6 +6,7 @@ Revision history for File-Serialize
  [BUG FIXES]
  - test transerialize.t made optional to the presence
     of JSON::MaybeXS.
+ - add JSON/YAML modules as runtime recommendations.
 
  [DOCUMENTATION]
 
