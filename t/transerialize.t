@@ -3,6 +3,8 @@ use warnings;
 
 use Test::More tests => 12;
 
+use Test::Requires 'JSON::MaybeXS';
+
 use File::Serialize { canonical => 1};
 
 my %file;

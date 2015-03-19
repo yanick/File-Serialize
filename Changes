@@ -4,6 +4,8 @@ Revision history for File-Serialize
  [API CHANGES]
 
  [BUG FIXES]
+ - test transerialize.t made optional to the presence
+    of JSON::MaybeXS.
 
  [DOCUMENTATION]
 
