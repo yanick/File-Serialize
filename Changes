@@ -1,20 +1,12 @@
 Revision history for File-Serialize
 
-{{$NEXT}}
- [API CHANGES]
-
+0.4.1 2015-03-19
  [BUG FIXES]
- - test transerialize.t made optional to the presence
-    of JSON::MaybeXS.
+ - test transerialize.t made optional to the presence of JSON::MaybeXS.
  - add JSON/YAML modules as runtime recommendations.
 
- [DOCUMENTATION]
-
- [ENHANCEMENTS]
-
- [NEW FEATURES]
-
  [STATISTICS]
+ - code churn: 3 files changed, 16 insertions(+), 1 deletion(-)
 
 0.4.0 2015-03-18
  [ENHANCEMENTS]
