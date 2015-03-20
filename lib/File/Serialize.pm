@@ -45,6 +45,12 @@ our %serializers = (
         serialize   => sub { TOML::to_toml( shift ) },
         deserialize => sub { TOML::from_toml( shift ) },
     },
+    XML => {
+        extensions => [ 'xml' ],
+        init => 'XML::Simple',
+        serialize => sub { XML::Simple->new->XMLout(shift) },
+        deserialize => sub { XML::Simple->new->XMLin(shift) },
+    },
 );
 
 sub _generate_serialize_file {

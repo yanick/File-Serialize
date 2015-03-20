@@ -84,6 +84,24 @@ None
 
 =back
 
+=head2 XML
+
+=over
+
+=item extensions
+
+xml 
+
+=item module used
+
+L<XML::Simple>
+
+=item supported options
+
+None
+
+=back
+
 =head1 OPTIONS
 
 I<File::Serialize> recognizes a set of options that, if applicable,
