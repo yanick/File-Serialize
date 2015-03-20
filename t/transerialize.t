@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use Test::Requires 'JSON::MaybeXS';
 
@@ -93,3 +93,8 @@ transerialize_file \@data
 is_deeply deserialize_file('all.json') => [1..10], 'all.json';
 is_deeply deserialize_file('even.json') => [2,4,6,8,10], 'even.json';
 is_deeply deserialize_file('odd.json') => [1,3,5,7,9], 'odd.json';
+
+my $result;
+transerialize_file [ 'a', 'b' ] => sub { [ map { uc } @$_ ] } => \$result;
+
+is_deeply $result => [ 'A', 'B' ], "to a scalar ref";

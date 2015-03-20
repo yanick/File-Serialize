@@ -9,6 +9,7 @@ Revision history for File-Serialize
 
  [ENHANCEMENTS]
  - add support for XML files.
+ - final link of transerialize_file can be a scalar ref.
 
  [NEW FEATURES]
 

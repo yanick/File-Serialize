@@ -242,6 +242,11 @@ Has to be the final step(s) of the chain. Just like the arguments
 of C<serialize_file>. C<$filename> can be a string or a L<Path::Tiny> object.
 C<$options> is optional.
 
+=item \$result
+
+Has to be the final step of the chain. Will assign the transformed data
+to C<$result> instead of serializing to a file.
+
 =back
 
 
