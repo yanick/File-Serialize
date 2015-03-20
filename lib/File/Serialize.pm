@@ -140,6 +140,12 @@ sub _generate_transerialize_file {
                     $serialize_file->($f,$data,$o);
                 }
             }
+            elsif ( ref $step eq 'SCALAR' ) {
+                $$step = $data;
+            }
+            else {
+                die "wrong chain argument";
+            }
         }
 
     }
