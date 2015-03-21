@@ -19,6 +19,7 @@ t/add_extension.t
 t/basic.t
 t/corpus/foo.json
 t/corpus/foo.toml
+t/corpus/foo.xml
 t/corpus/foo.yml
 t/corpus/mystery
 t/defaults.t
