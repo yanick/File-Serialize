@@ -60,25 +60,30 @@ sub _generate_serialize_file {
     return sub {
         my( $file, $content, $options ) = @_;
 
+        $options = { format => $options } if $options and not ref $options;
+
         $options = { %$global, %{ $options||{} } } if $global;
         # default to utf8 => 1
         $options->{utf8} //= 1;
 
-        $file = path($file);
-
-        my $method = $options->{utf8} ? 'spew_utf8' : 'spew';
+        $file = path($file) unless $file eq '-';
 
         my $serializer = _serializer($file, $options);
 
         $file = path( join '.', $file, $serializer->{extensions}[0] )
-            if $options->{add_extension};
+            if $options->{add_extension} and $file ne '-';
+
+        my $method = $options->{utf8} ? 'spew_utf8' : 'spew';
 
         $options = $_->($options, 1) for
                     first { $_ }
                     map( { $serializer->{$_} } qw/ options / ), sub { +{} };
-        
 
-        $file->$method($serializer->{serialize}->($content, $options));
+        my $serialized = $serializer->{serialize}->($content,$options);
+
+        return print $serialized if $file eq '-';
+
+        $file->$method($serialized);
     }
 }
 
@@ -88,7 +93,7 @@ sub _generate_deserialize_file {
     return sub {
         my( $file, $options ) = @_;
 
-        $file = path($file);
+        $file = path($file) unless $file eq '-';
 
         $options = { %$global, %{ $options||{} } } if $global;
         $options->{utf8} //= 1;
@@ -98,13 +103,16 @@ sub _generate_deserialize_file {
         my $serializer = _serializer($file, $options);
 
         $file = path( join '.', $file, $serializer->{extensions}[0] )
-            if $options->{add_extension};
+            if $options->{add_extension} and $file ne '-';
 
         ($options) = map { $_->($options) }
                     first { $_ }
                     map( { $serializer->{$_} } qw/ options / ), sub { +{} };
 
-        return $serializer->{deserialize}->($file->$method, $options);
+        return $serializer->{deserialize}->(
+            $file eq '-' ? do { local $/ = <STDIN> } : $file->$method, 
+            $options
+        );
     }
 }
 
