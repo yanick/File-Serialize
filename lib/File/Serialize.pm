@@ -33,11 +33,12 @@ our %serializers = (
             for my $k( qw/ pretty canonical allow_nonref / ) {
                 $groomed{$k} = $options->{$k} if defined $options->{$k};
             }
+            $groomed{allow_nonref} //= 1;
 
             return \%groomed;
         },
         serialize => sub { JSON::MaybeXS->new(%{$_[1]})->encode( $_[0] ); },
-        deserialize => sub { use JSON::XS; JSON::XS->new->allow_nonref->decode($_[0]) },
+        deserialize => sub { JSON::MaybeXS->new(%{$_[1]})->decode($_[0]) },
     },
     TOML => {
         extensions => [ 'toml' ],

@@ -62,7 +62,7 @@ L<JSON::MaybeXS>
 
 =item supported options
 
-pretty, canonical, allow_nonref
+pretty, canonical, allow_nonref (default: true)
 
 =back
 
