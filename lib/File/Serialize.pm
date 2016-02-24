@@ -30,9 +30,10 @@ our %serializers = (
             # arguments $options, $serialize
             my $options = shift; 
             my %groomed;
-            for my $k( qw/ pretty canonical / ) {
+            for my $k( qw/ pretty canonical allow_nonref / ) {
                 $groomed{$k} = $options->{$k} if defined $options->{$k};
             }
+            $groomed{allow_nonref} //= 1;
 
             return \%groomed;
         },
