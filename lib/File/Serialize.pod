@@ -138,7 +138,13 @@ If set to a C<true> value, file will be read/written out using L<Path::Tiny>'s C
 method ( which sets a C<binmode> of C<:encoding(UTF-8)>). Otherwise,
 L<Path::Tiny>'s C<slurp> and C<spew> methods are used.
 
-Defaults to being C<true> because, after all, it is 2015.
+Defaults to being C<true> because, after all, this is the twenty-first century.
+
+=item allow_nonref => $boolean
+
+If set to true, allow to serialize non-ref data. 
+
+Defaults to C<true>.
 
 =back
 
@@ -150,9 +156,16 @@ Defaults to being C<true> because, after all, it is 2015.
 
     serialize_file '/path/to/file.json' => $data;
 
+If the C<$path> is 'C<->', the serialized data will be printed
+to STDOUT.
+
 =head2 deserialize_file $path, $options
 
     my $data = deserialize_file '/path/to/file.json';
+
+If the C<$path> is 'C<->', the serialized data will be read from
+STDIN.
+
 
 =head2 transerialize_file $input, @transformation_chain
 

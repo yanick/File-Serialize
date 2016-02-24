@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+#PODNAME: transerialize
 
 package File::Serialize::transerialize;
 #ABSTRACT: transerialize files from a format to a different one
