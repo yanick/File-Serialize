@@ -35,6 +35,8 @@ sub _generate_serialize_file {
         # default to utf8 => 1
         $options->{utf8} //= 1;
         $options->{allow_nonref} //= 1;
+        $options->{pretty} //= 1;
+        $options->{canonical} //= 1;
 
         $file = path($file) unless $file eq '-';
 

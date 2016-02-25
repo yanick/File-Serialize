@@ -2,6 +2,7 @@ Revision history for File-Serialize
 
 {{$NEXT}}
  [API CHANGES]
+ - 'pretty' and 'canonical' true by default.
 
  [BUG FIXES]
 
