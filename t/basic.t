@@ -1,20 +1,21 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6; 
+use Test::More; 
 use Test::Exception;
 use Test::Requires;
 
 use Path::Tiny;
 use File::Serialize;
 
-for my $serializer ( keys %File::Serialize::serializers ) {
+for my $serializer ( File::Serialize->_all_serializers ) {
     subtest $serializer => sub {
-        my $value =  $File::Serialize::serializers{$serializer};
 
-        test_requires $value->{init};
+        plan skip_all => "dependencies for $serializer not met" 
+            unless $serializer->is_operative;
 
-        my $ext = $value->{extensions}[0];
+
+        my $ext = $serializer->extension;
         my $x = deserialize_file( "t/corpus/foo.$ext" );
 
         is_deeply $x => { foo => 'bar' };
@@ -39,3 +40,5 @@ subtest "explicit format" => sub {
 
     like path('t/corpus/mystery')->slurp_utf8 => qr'- 1', 'right format';
 };
+
+done_testing;
