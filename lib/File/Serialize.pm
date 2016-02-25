@@ -9,50 +9,19 @@ use strict;
 use warnings;
 
 use Class::Load qw/ load_class /;
+use List::AllUtils qw/ uniq /;
 use List::Util 1.41 qw/ pairgrep first none any pairmap /;
 use Path::Tiny;
+
+use Module::Pluggable 
+   require => 1,
+   sub_name => '_all_serializers',
+   search_path => __PACKAGE__ . '::Serializer'
+;
 
 use parent 'Exporter::Tiny';
 
 our @EXPORT = qw/ serialize_file deserialize_file transerialize_file /;
-
-our %serializers = (
-    YAML => {
-        extensions => [ 'yml', 'yaml' ],  # first extension is the canonical one
-        init => 'YAML::Tiny',
-        serialize   => sub { YAML::Tiny->new(shift)->write_string },  # arguments: $data, $options
-        deserialize => sub { YAML::Tiny->new->read_string(shift)->[0] },  # arguments: $data, $options
-    },
-    JSON => {
-        extensions => [ 'json', 'js' ],
-        init => 'JSON::MaybeXS',
-        options => sub { 
-            # arguments $options, $serialize
-            my $options = shift; 
-            my %groomed;
-            for my $k( qw/ pretty canonical allow_nonref / ) {
-                $groomed{$k} = $options->{$k} if defined $options->{$k};
-            }
-            $groomed{allow_nonref} //= 1;
-
-            return \%groomed;
-        },
-        serialize => sub { JSON::MaybeXS->new(%{$_[1]})->encode( $_[0] ); },
-        deserialize => sub { JSON::MaybeXS->new(%{$_[1]})->decode($_[0]) },
-    },
-    TOML => {
-        extensions => [ 'toml' ],
-        init => 'TOML',
-        serialize   => sub { TOML::to_toml( shift ) },
-        deserialize => sub { TOML::from_toml( shift ) },
-    },
-    XML => {
-        extensions => [ 'xml' ],
-        init => 'XML::Simple',
-        serialize => sub { XML::Simple->new->XMLout(shift) },
-        deserialize => sub { XML::Simple->new->XMLin(shift) },
-    },
-);
 
 sub _generate_serialize_file {
     my( undef, undef, undef, $global )= @_;
@@ -65,21 +34,18 @@ sub _generate_serialize_file {
         $options = { %$global, %{ $options||{} } } if $global;
         # default to utf8 => 1
         $options->{utf8} //= 1;
+        $options->{allow_nonref} //= 1;
 
         $file = path($file) unless $file eq '-';
 
         my $serializer = _serializer($file, $options);
 
-        $file = path( join '.', $file, $serializer->{extensions}[0] )
+        $file = path( join '.', $file, $serializer->extension )
             if $options->{add_extension} and $file ne '-';
 
         my $method = $options->{utf8} ? 'spew_utf8' : 'spew';
 
-        $options = $_->($options, 1) for
-                    first { $_ }
-                    map( { $serializer->{$_} } qw/ options / ), sub { +{} };
-
-        my $serialized = $serializer->{serialize}->($content,$options);
+        my $serialized = $serializer->serialize($content,$options);
 
         return print $serialized if $file eq '-';
 
@@ -97,19 +63,16 @@ sub _generate_deserialize_file {
 
         $options = { %$global, %{ $options||{} } } if $global;
         $options->{utf8} //= 1;
+        $options->{allow_nonref} //= 1;
 
         my $method = 'slurp' . ( '_utf8' ) x !! $options->{utf8};
 
         my $serializer = _serializer($file, $options);
 
-        $file = path( join '.', $file, $serializer->{extensions}[0] )
+        $file = path( join '.', $file, $serializer->extension )
             if $options->{add_extension} and $file ne '-';
 
-        ($options) = map { $_->($options) }
-                    first { $_ }
-                    map( { $serializer->{$_} } qw/ options / ), sub { +{} };
-
-        return $serializer->{deserialize}->(
+        return $serializer->deserialize(
             $file eq '-' ? do { local $/ = <STDIN> } : $file->$method, 
             $options
         );
@@ -160,25 +123,27 @@ sub _generate_transerialize_file {
     }
 }
 
+sub _all_operative_formats {
+    my $self = shift;
+    return uniq map { $_->extension } $self->_all_operative_formats;
+}
+
+sub _all_operative_serializers {
+    grep { $_->is_operative } sort __PACKAGE__->_all_serializers;
+}
+
 sub _serializer {
     my( $self, $options ) = @_;
 
     no warnings qw/ uninitialized /;
 
-    my $format = $options->{format} || do {
-        no warnings;
-        my( $ext ) = $self->basename =~ /\.(.*?)$/;
-        first { $_ } pairmap { $a } pairgrep { any { $_ eq $ext } @{ $b->{extensions} } } %serializers;
-    };
+    my @serializers = __PACKAGE__->_all_operative_serializers;
 
-    $format = lc $format;
+    my $format = $options->{format} || ( $self->basename =~ /\.(\w+)$/ )[0];
 
-    my( $key ) = grep { lc($_) eq $format } keys %serializers;
-    my $serializer = $serializers{$key} or die "no serializer found for file '$self'\n";
-
-    load_class( $serializer->{init} );
-
-    return $serializer;
+    return( first { $_->does_extension($format) } @serializers
+            or die "no serializer found for $format"
+    );
 }
 
 1;

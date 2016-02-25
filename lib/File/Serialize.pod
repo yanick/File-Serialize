@@ -265,48 +265,9 @@ to C<$result> instead of serializing to a file.
 
 =head1 ADDING A SERIALIZER
 
-    $File::Serialize::serializers{'MySerializer'} = {
-        extensions => [ 'myser' ],
-        init => 'My::Serializer',
-        serialize   => sub { my($data,$options) = @_; ...; },
-        deserialize => sub { my($data,$options) = @_; ...; },
-        options => sub { my( $raw_options, $serialize ) = @_; ...; },
-    };
-
-Serializers can be added via the C<$File::Serialize::serializers> hash. 
-The key is the name of the serializer, and the value is an hashref of its
-configuration parameters, which can be:
-
-=over
-
-=item extensions
-
-Arrayref of the file extensions associated with this serializer.
-The first extension is considered to be the canonical extension 
-for this serialization format.
-
-=item init 
-
-Optional. A module to source when this serializer is used.
-
-=item serialize
-
-The serialization function to use. Will receive the data structure and the groomed
-options as arguments, is expected to return the serialized data.
-
-=item deserialize
-
-The deserialization function to use. Will receive the serialized data and the groomed
-options as arguments, is expected to return the deserialized data structure.
-
-=item options 
-
-Function that takes the options as passed to C<serialize_file>/C<deserialize_file> 
-and convert them to something palatable to the current serializer. Gets the raw options
-and a C<is_serialize> boolean (will be C<1> for a serializer call, C<undef> for the deserializer).
-
-
-=back
+Serializers are added by creating a F<File::Serialize::Serializer::*> class that
+implement the L<File::Serialize::Serializer> role. See the documentation for the
+role for more details.
 
 
 =cut
