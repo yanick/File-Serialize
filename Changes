@@ -10,6 +10,7 @@ Revision history for File-Serialize
  [ENHANCEMENTS]
  - Allow 'allow_nonref' option for JSON.
  - New script 'transerialize'.
+ - Serializers moved in their own classes.
 
  [NEW FEATURES]
 
