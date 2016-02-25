@@ -18,7 +18,7 @@ my $data = [ { alpha => 1 }, { beta => 2 } ];
 
 serialize_file 'foo.json' => $data;
 
-transerialize_file 'foo.json' => sub { $_ = { map { %$_ } @$_ } } => 'bar.json';
+transerialize_file 'foo.json' => sub { $_ = { map { %$_ } @$_ } } => { 'bar.json' => { pretty => 0 } };
 
 is $file{'bar.json'} => '{"alpha":1,"beta":2}', 'bar.json';
 

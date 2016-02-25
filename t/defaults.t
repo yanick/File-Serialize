@@ -14,9 +14,7 @@ sub Path::Tiny::spew_utf8 { $file = $_[1]; }
 
     use Test::More;
 
-    use File::Serialize {
-        pretty => 1,
-    };
+    use File::Serialize;
 
     serialize_file( "foo.json" => { a => 'b' } );
 
@@ -32,7 +30,7 @@ sub Path::Tiny::spew_utf8 { $file = $_[1]; }
 
     use Test::More;
 
-    use File::Serialize; 
+    use File::Serialize { pretty => 0 }; 
 
     serialize_file( "foo.json" => { a => 'b' } );
 
