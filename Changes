@@ -1,18 +1,11 @@
 Revision history for File-Serialize
 
-{{$NEXT}}
-  [ API CHANGES ]
-
+1.0.1 2016-02-26
   [ BUG FIXES ]
-  - FS::Serializer was dying if the required modules are not found.
-
-  [ DOCUMENTATION ]
-
-  [ ENHANCEMENTS ]
-
-  [ NEW FEATURES ]
+    - FS::Serializer was dying if the required modules are not found.
 
   [ STATISTICS ]
+    - code churn: 4 files changed, 75 insertions(+), 44 deletions(-)
 
 1.0.0 2016-02-25
   [ API CHANGES ]
