@@ -4,6 +4,7 @@ Revision history for File-Serialize
   [ API CHANGES ]
 
   [ BUG FIXES ]
+  - FS::Serializer was dying if the required modules are not found.
 
   [ DOCUMENTATION ]
 

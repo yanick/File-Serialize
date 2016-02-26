@@ -80,8 +80,7 @@ provided, C<groom_options> is used.
 use strict;
 use warnings;
 
-use List::Util qw/ reduce/;
-use List::MoreUtils qw/ any /;
+use List::MoreUtils qw/ any all /;
 use Module::Info;
 use Module::Runtime qw/ use_module /;
 
@@ -105,7 +104,7 @@ sub does_extension {
 }
 
 sub is_operative {
-    reduce { $a and Module::Info->new_from_module($b)->file  } 1, $_[0]->required_modules;
+    all { Module::Info->new_from_module($_) } $_[0]->required_modules;
 }
 
 sub groom_serialize_options {

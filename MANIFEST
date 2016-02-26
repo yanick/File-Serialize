@@ -30,6 +30,7 @@ t/corpus/mystery
 t/corpus/non-ref.json
 t/defaults.t
 t/json-allow-non-ref.t
+t/serializer.t
 t/transerialize.t
 t/utf8.t
 xt/release/pause-permissions.t
