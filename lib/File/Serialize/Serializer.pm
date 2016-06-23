@@ -84,7 +84,7 @@ use List::MoreUtils qw/ any all /;
 use Module::Info;
 use Module::Runtime qw/ use_module /;
 
-use Moo::Role;
+use Role::Tiny;
 
 requires 'extensions';  # first extension is the canonical one
 
