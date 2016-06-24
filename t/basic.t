@@ -8,8 +8,19 @@ use Test::Requires;
 use Path::Tiny;
 use File::Serialize;
 
-for my $serializer ( File::Serialize->_all_serializers ) {
+use Module::Runtime qw/ use_module /;
+
+for my $serializer ( 
+    map { "File::Serialize::Serializer::$_" } qw/
+        JSON::MaybeXS
+        TOML
+        XML::Simple
+        YAML::Tiny
+    /
+) {
     subtest $serializer => sub {
+        
+        use_module( $serializer );
 
         plan skip_all => "dependencies for $serializer not met" 
             unless $serializer->is_operative;
