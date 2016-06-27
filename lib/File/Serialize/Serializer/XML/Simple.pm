@@ -1,4 +1,5 @@
 package File::Serialize::Serializer::XML::Simple;
+#ABSTRACT: XML::Simple serializer for File::Serialize
 
 use strict;
 use warnings;
@@ -21,9 +22,22 @@ sub deserialize {
 
 1;
 
+__END__
 
-use warnings;
+=head1 DESCRIPTION
 
+=over
 
+=item B<extensions>
 
+C<xml>.
 
+=item B<module used>
+
+L<XML::Simple>
+
+=item B<supported options>
+
+None
+
+=back

@@ -36,5 +36,23 @@ Registered against the extension C<jsony>.
 This serializer actually only deserializes. Its serialization
 is taken care of by any available JSON serializer.
 
+=over
+
+=item B<extensions>
+
+C<jsony>
+
+=item B<module used>
+
+L<JSONY>
+
+=item B<supported options>
+
+deserializer: none
+
+serializer: depends on the JSON serializer used.
+
+=back
+
 =cut
 
