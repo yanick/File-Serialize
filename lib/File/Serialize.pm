@@ -38,12 +38,13 @@ sub _generate_serialize_file {
         $options->{pretty} //= 1;
         $options->{canonical} //= 1;
 
-        $file = path($file) unless $file eq '-';
+        $file = path($file) unless $file eq '-' or ref $file eq 'SCALAR';
 
         my $serializer = _serializer($file, $options);
 
         $file = path( join '.', $file, $serializer->extension )
-            if $options->{add_extension} and $file ne '-';
+            if $options->{add_extension} and $file ne '-'
+                and ref $file ne 'SCALAR';
 
         my $method = $options->{utf8} ? 'spew_utf8' : 'spew';
 
@@ -51,7 +52,12 @@ sub _generate_serialize_file {
 
         return print $serialized if $file eq '-';
 
-        $file->$method($serialized);
+        if( ref $file eq 'SCALAR' ) {
+            $$file = $serialized;
+        }
+        else {
+            $file->$method($serialized);
+        }
     }
 }
 
@@ -61,7 +67,7 @@ sub _generate_deserialize_file {
     return sub {
         my( $file, $options ) = @_;
 
-        $file = path($file) unless $file eq '-';
+        $file = path($file) unless $file eq '-' or ref $file eq 'SCALAR';
 
         $options = { %$global, %{ $options||{} } } if $global;
         $options->{utf8} //= 1;
@@ -72,10 +78,12 @@ sub _generate_deserialize_file {
         my $serializer = _serializer($file, $options);
 
         $file = path( join '.', $file, $serializer->extension )
-            if $options->{add_extension} and $file ne '-';
+            if $options->{add_extension} and $file ne '-' and ref $file ne 'SCALAR';
 
         return $serializer->deserialize(
-            $file eq '-' ? do { local $/ = <STDIN> } : $file->$method, 
+            $file eq '-' ? do { local $/ = <STDIN> } 
+          : ref $file eq 'SCALAR' ? $$file
+          : $file->$method, 
             $options
         );
     }

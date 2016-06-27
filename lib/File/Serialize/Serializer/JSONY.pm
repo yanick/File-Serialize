@@ -13,9 +13,7 @@ sub extensions { qw/ jsony / };
 
 sub serialize {
     my( $self, $data, $options ) = @_;
-    local *STDOUT;
-    open STDOUT,  '>', \my $output;
-    serialize_file '-', $data, { format => 'json' };
+    serialize_file \my $output, $data, { format => 'json' };
     return $output;
 }
 

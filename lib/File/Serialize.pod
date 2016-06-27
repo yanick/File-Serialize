@@ -157,15 +157,23 @@ Defaults to C<true>.
     serialize_file '/path/to/file.json' => $data;
 
 If the C<$path> is 'C<->', the serialized data will be printed
-to STDOUT.
+to STDOUT. If it a scalar ref, the serialized data will be assigned
+to that variable.
+
+    serialize_file \my $serialized => $data;
+
+    print $serialized;
 
 =head2 deserialize_file $path, $options
 
     my $data = deserialize_file '/path/to/file.json';
 
 If the C<$path> is 'C<->', the serialized data will be read from
-STDIN.
+STDIN. If it a scalar ref, the serialized data will be read
+from that variable.
 
+    my $json = '{"foo":1}';
+    my $data = deserialize_file \$json;
 
 =head2 transerialize_file $input, @transformation_chain
 
