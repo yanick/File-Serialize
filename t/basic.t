@@ -23,7 +23,7 @@ for my $serializer (
         use_module( $serializer );
 
         plan skip_all => "dependencies for $serializer not met" 
-            unless $serializer->is_operative;
+            unless use_module($serializer)->is_operative;
 
 
         my $ext = $serializer->extension;

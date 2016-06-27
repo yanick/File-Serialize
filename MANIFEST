@@ -14,6 +14,7 @@ doap.xml
 lib/File/Serialize.pm
 lib/File/Serialize/Serializer.pm
 lib/File/Serialize/Serializer/JSON/MaybeXS.pm
+lib/File/Serialize/Serializer/JSONY.pm
 lib/File/Serialize/Serializer/TOML.pm
 lib/File/Serialize/Serializer/XML/Simple.pm
 lib/File/Serialize/Serializer/YAML/Tiny.pm
@@ -23,6 +24,7 @@ t/00-report-prereqs.t
 t/add_extension.t
 t/basic.t
 t/corpus/foo.json
+t/corpus/foo.jsony
 t/corpus/foo.toml
 t/corpus/foo.xml
 t/corpus/foo.yml

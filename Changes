@@ -6,8 +6,12 @@ Revision history for File-Serialize
   [ BUG FIXES ]
 
   [ DOCUMENTATION ]
+  - Documentation pushed to the serializers.
 
   [ ENHANCEMENTS ]
+  - serialize_file/deserialize_file can now take a scalar ref as the "file" to
+    serialize/deserialize.
+  - JSONY serializer added.
 
   [ NEW FEATURES ]
 

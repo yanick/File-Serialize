@@ -30,75 +30,27 @@ an argument to the 'use' statement.
 
 =head1 SUPPORTED SERIALIZERS
 
-=head2 YAML
-
 =over
 
-=item extensions
+=item YAML
 
-yaml, yml
+L<File::Serialize::Serialize::YAML::Tiny>
 
-=item module used
+=item JSON
 
-L<YAML::Tiny>
+L<File::Serialize::Serializer::JSON::MaybeXS>
 
-=item supported options
+=item TOML
 
-None
+L<File::Serialize::Serializer::TOML>
 
-=back
+=item XML
 
-=head2 JSON
+L<File::Serialize::Serializer::XML::Simple>
 
-=over
+=item jsony 
 
-=item extensions
-
-json, js
-
-=item module used
-
-L<JSON::MaybeXS>
-
-=item supported options
-
-pretty (default: true), canonical (default: true), allow_nonref (default: true)
-
-=back
-
-=head2 TOML
-
-=over
-
-=item extensions
-
-toml 
-
-=item module used
-
-L<TOML>
-
-=item supported options
-
-None
-
-=back
-
-=head2 XML
-
-=over
-
-=item extensions
-
-xml 
-
-=item module used
-
-L<XML::Simple>
-
-=item supported options
-
-None
+L<File::Serialize::Serializer::JSONY>
 
 =back
 
@@ -157,15 +109,23 @@ Defaults to C<true>.
     serialize_file '/path/to/file.json' => $data;
 
 If the C<$path> is 'C<->', the serialized data will be printed
-to STDOUT.
+to STDOUT. If it a scalar ref, the serialized data will be assigned
+to that variable.
+
+    serialize_file \my $serialized => $data;
+
+    print $serialized;
 
 =head2 deserialize_file $path, $options
 
     my $data = deserialize_file '/path/to/file.json';
 
 If the C<$path> is 'C<->', the serialized data will be read from
-STDIN.
+STDIN. If it a scalar ref, the serialized data will be read
+from that variable.
 
+    my $json = '{"foo":1}';
+    my $data = deserialize_file \$json;
 
 =head2 transerialize_file $input, @transformation_chain
 

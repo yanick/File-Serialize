@@ -1,4 +1,5 @@
 package File::Serialize::Serializer::YAML::Tiny;
+#ABSTRACT: YAML::Tiny serializer for File::Serialize
 
 use strict;
 use warnings;
@@ -21,4 +22,22 @@ sub deserialize {
 
 1;
 
+__END__
 
+=head1 DESCRIPTION
+
+=over
+
+=item B<extensions>
+
+C<yaml>, C<yml>.
+
+=item B<module used>
+
+L<YAML::Tiny>
+
+=item B<supported options>
+
+none
+
+=back

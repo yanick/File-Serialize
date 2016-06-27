@@ -1,4 +1,5 @@
 package File::Serialize::Serializer::TOML;
+#ABSTRACT: TOML serializer for File::Serialize
 
 use strict;
 use warnings;
@@ -21,8 +22,22 @@ sub deserialize {
 
 1;
 
+__END__
 
-use warnings;
+=head1 DESCRIPTION
 
+=over
 
+=item B<extensions>
 
+C<toml>
+
+=item B<module used>
+
+L<TOML>
+
+=item B<supported options>
+
+None
+
+=back

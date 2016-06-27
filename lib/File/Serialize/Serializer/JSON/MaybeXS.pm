@@ -1,4 +1,5 @@
 package File::Serialize::Serializer::JSON::MaybeXS;
+#ABSTRACT: JSON::MaybeXS serializer for File::Serialize
 
 use strict;
 use warnings;
@@ -30,3 +31,23 @@ sub groom_options {
 }
 
 1;
+
+__END__
+
+=head1 DESCRIPTION
+
+=over
+
+=item B<extensions>
+
+C<json>, C<js>.
+
+=item B<module used>
+
+L<JSON::MaybeXS>
+
+=item B<supported options>
+
+pretty (default: true), canonical (default: true), allow_nonref (default: true)
+
+=back
