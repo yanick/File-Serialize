@@ -1,5 +1,5 @@
 package File::Serialize::Serializer::JSONY;
-# abstract: JSONY serializer for File::Serialize
+#ABSTRACT: JSONY serializer for File::Serialize
 
 use strict;
 use warnings;
