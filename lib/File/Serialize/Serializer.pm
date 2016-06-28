@@ -29,6 +29,8 @@ should be used to serialize/deserialize a specific file, it's important that
 the modules on which the serializer depends are not just C<use>d, but are rather
 marked for import via the C<required_modules> and C<init> functions.
 
+=head2 Required methods
+
 A serializer should implement the following class methods:
 
 =over
@@ -73,6 +75,18 @@ provided, C<groom_options> is used.
 
 =back
 
+=head2  Provided methods
+
+The role provides the following attributes / methods:
+
+=over
+
+=item precedence 
+
+Returns the serializer's precedence, used to determine which one of the available
+serializer for a format to use. Default to C<100>. A value of C<0> means "don't use".
+
+=back
 
 
 =cut
@@ -85,10 +99,13 @@ use Module::Info;
 use Module::Runtime qw/ use_module /;
 
 use Moo::Role;
+use MooX::ClassAttribute;
 
 requires 'extensions';  # first extension is the canonical one
 
 requires 'serialize', 'deserialize';
+
+sub precedence { 100 }
 
 sub required_modules {
     my $package = shift;

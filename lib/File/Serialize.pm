@@ -139,7 +139,14 @@ sub _all_operative_formats {
 }
 
 sub _all_operative_serializers {
-    grep { $_->is_operative } sort __PACKAGE__->_all_serializers;
+    sort {
+        $b->precedence <=> $a->precedence
+            or
+        $a cmp $b
+    }
+    grep { $_->is_operative }
+    grep { $_->precedence }
+    __PACKAGE__->_all_serializers;
 }
 
 sub _serializer {
@@ -147,11 +154,12 @@ sub _serializer {
 
     no warnings qw/ uninitialized /;
 
-    my @serializers = __PACKAGE__->_all_operative_serializers;
+    my $serializers = $options->{serializers} || [ __PACKAGE__->_all_operative_serializers ];
+    s/^\+/File::Serialize::Serializer::/ for @$serializers;
 
     my $format = $options->{format} || ( $self->basename =~ /\.(\w+)$/ )[0];
 
-    return( first { $_->does_extension($format) } @serializers
+    return( first { $_->does_extension($format) } @$serializers
             or die "no serializer found for $format"
     );
 }

@@ -42,6 +42,10 @@ is taken care of by any available JSON serializer.
 
 C<jsony>
 
+=item B<precedence>
+
+100
+
 =item B<module used>
 
 L<JSONY>
