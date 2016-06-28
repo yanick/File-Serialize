@@ -1,18 +1,11 @@
 Revision history for File-Serialize
 
-{{$NEXT}}
-  [ API CHANGES ]
-
+1.1.1 2016-06-28
   [ BUG FIXES ]
-  - Some tests were failing for perls <= 5.16
-
-  [ DOCUMENTATION ]
-
-  [ ENHANCEMENTS ]
-
-  [ NEW FEATURES ]
+    - Some tests were failing for perls <= 5.16
 
   [ STATISTICS ]
+    - code churn: 2 files changed, 19 insertions(+), 7 deletions(-)
 
 1.1.0 2016-06-27
   [ DOCUMENTATION ]
