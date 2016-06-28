@@ -30,6 +30,12 @@ an argument to the 'use' statement.
 
 =head1 SUPPORTED SERIALIZERS
 
+File::Serialize will pick the serializer to use based on
+the extension of the filename or the explicitly given C<format>.
+If several serializers are registered for the format,
+the available serializer with the highest precedence number will
+be used.
+
 =over
 
 =item YAML

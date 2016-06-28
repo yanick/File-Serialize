@@ -32,6 +32,11 @@ __END__
 
 C<toml>
 
+=item B<precedence>
+
+100
+
+
 =item B<module used>
 
 L<TOML>

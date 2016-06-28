@@ -42,6 +42,11 @@ __END__
 
 C<json>, C<js>.
 
+=item B<precedence>
+
+100
+
+
 =item B<module used>
 
 L<JSON::MaybeXS>

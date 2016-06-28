@@ -16,25 +16,24 @@ for my $serializer (
         TOML
         XML::Simple
         YAML::Tiny
+        YAML::XS
     /
 ) {
     subtest $serializer => sub {
-        
         use_module( $serializer );
 
         plan skip_all => "dependencies for $serializer not met" 
             unless use_module($serializer)->is_operative;
 
-
         my $ext = $serializer->extension;
-        my $x = deserialize_file( "t/corpus/foo.$ext" );
+        my $x = deserialize_file( "t/corpus/foo.$ext", { serializers => [ $serializer ] } );
 
         is_deeply $x => { foo => 'bar' };
 
         my $time = scalar localtime;
 
         my $path = "t/corpus/time.$ext";
-        serialize_file( $path => {time => $time} );
+        serialize_file( $path => {time => $time}, { serializers => [ $serializer ] } );
 
         is deserialize_file($path)->{time} => $time;
     }

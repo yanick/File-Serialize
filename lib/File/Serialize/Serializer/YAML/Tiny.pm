@@ -32,6 +32,10 @@ __END__
 
 C<yaml>, C<yml>.
 
+=item B<precedence>
+
+100
+
 =item B<module used>
 
 L<YAML::Tiny>
