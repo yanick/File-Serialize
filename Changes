@@ -4,6 +4,7 @@ Revision history for File-Serialize
   [ API CHANGES ]
 
   [ BUG FIXES ]
+  - Some tests were failing for perls <= 5.16
 
   [ DOCUMENTATION ]
 

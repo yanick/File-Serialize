@@ -1,6 +1,9 @@
+use strict;
+use warnings;
+
 use Test::More tests => 1;
 
-use Test::Requires {
+use Test::Requires +{
     map { $_ => 0 } qw/ YAML::Tiny YAML::XS /
 };
 
