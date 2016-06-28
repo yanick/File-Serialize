@@ -18,6 +18,7 @@ lib/File/Serialize/Serializer/JSONY.pm
 lib/File/Serialize/Serializer/TOML.pm
 lib/File/Serialize/Serializer/XML/Simple.pm
 lib/File/Serialize/Serializer/YAML/Tiny.pm
+lib/File/Serialize/Serializer/YAML/XS.pm
 t/00-compile.t
 t/00-report-prereqs.dd
 t/00-report-prereqs.t
@@ -32,6 +33,7 @@ t/corpus/mystery
 t/corpus/non-ref.json
 t/defaults.t
 t/json-allow-non-ref.t
+t/precedence.t
 t/serializer.t
 t/transerialize.t
 t/utf8.t
