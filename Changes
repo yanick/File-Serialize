@@ -1,23 +1,18 @@
 Revision history for File-Serialize
 
-{{$NEXT}}
-  [ API CHANGES ]
-
-  [ BUG FIXES ]
-
+1.1.0 2016-06-27
   [ DOCUMENTATION ]
-  - Documentation pushed to the serializers.
+    - Documentation pushed to the serializers.
 
   [ ENHANCEMENTS ]
-  - serialize_file/deserialize_file can now take a scalar ref as the "file" to
-    serialize/deserialize.
-  - Added `JSONY` serializer.
-  - Serializers now  have a precedence.
-  - Added `YAML::XS` serializer.
-
-  [ NEW FEATURES ]
+    - serialize_file/deserialize_file can now take a scalar ref as the
+      "file" to serialize/deserialize.
+    - Added `JSONY` serializer.
+    - Serializers now  have a precedence.
+    - Added `YAML::XS` serializer.
 
   [ STATISTICS ]
+    - code churn: 14 files changed, 314 insertions(+), 76 deletions(-)
 
 1.0.1 2016-02-26
   [ BUG FIXES ]

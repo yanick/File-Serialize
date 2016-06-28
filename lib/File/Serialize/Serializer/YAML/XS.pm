@@ -1,6 +1,7 @@
 package File::Serialize::Serializer::YAML::XS;
+our $AUTHORITY = 'cpan:YANICK';
 #ABSTRACT: YAML:XS serializer for File::Serialize
-
+$File::Serialize::Serializer::YAML::XS::VERSION = '1.1.0';
 use strict;
 use warnings;
 
@@ -28,6 +29,18 @@ sub deserialize {
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+File::Serialize::Serializer::YAML::XS - YAML:XS serializer for File::Serialize
+
+=head1 VERSION
+
+version 1.1.0
+
 =head1 DESCRIPTION
 
 =over
@@ -49,3 +62,16 @@ L<YAML::XS>
 none
 
 =back
+
+=head1 AUTHOR
+
+Yanick Champoux <yanick@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2015 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
