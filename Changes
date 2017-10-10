@@ -9,6 +9,8 @@ Revision history for File-Serialize
 
   [ ENHANCEMENTS ]
   - Data::Dumper serializer added. (GH#5)
+  - Remove unused dependency to MooX::ClassAttribute.
+  - Go down to Role::Tiny. (GH#3, Jason Hall)
 
   [ NEW FEATURES ]
 
