@@ -8,6 +8,7 @@ Revision history for File-Serialize
   [ DOCUMENTATION ]
 
   [ ENHANCEMENTS ]
+  - Data::Dumper serializer added. (GH#5)
 
   [ NEW FEATURES ]
 
