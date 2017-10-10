@@ -5,7 +5,6 @@ use strict;
 use warnings;
 
 use Moo;
-use MooX::ClassAttribute;
 
 with 'File::Serialize::Serializer';
 
