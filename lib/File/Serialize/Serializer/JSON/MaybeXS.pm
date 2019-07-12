@@ -20,7 +20,7 @@ sub deserialize {
 }
 
 sub groom_options {
-   my( $self, $options ) = @_; 
+   my( $self, $options ) = @_;
 
     my %groomed;
     for my $k( qw/ pretty canonical allow_nonref / ) {
