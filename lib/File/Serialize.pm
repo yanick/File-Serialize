@@ -1,7 +1,7 @@
 package File::Serialize;
 # ABSTRACT: DWIM file serialization/deserialization
 
-use 5.16.0;
+use v5.16.0;
 
 use feature 'current_sub';
 
@@ -13,7 +13,7 @@ use List::AllUtils qw/ uniq /;
 use List::Util 1.41 qw/ pairgrep first none any pairmap /;
 use Path::Tiny;
 
-use Module::Pluggable 
+use Module::Pluggable
    require => 1,
    sub_name => '_all_serializers',
    search_path => __PACKAGE__ . '::Serializer'
@@ -38,7 +38,7 @@ sub _generate_serialize_file {
         $options->{pretty} //= 1;
         $options->{canonical} //= 1;
 
-        $file = path($file) unless $file eq '-' or ref $file eq 'SCALAR';
+        $file = path($file) unless $file =~ /^-/ or ref $file eq 'SCALAR';
 
         my $serializer = _serializer($file, $options);
 
@@ -81,9 +81,9 @@ sub _generate_deserialize_file {
             if $options->{add_extension} and $file ne '-' and ref $file ne 'SCALAR';
 
         return $serializer->deserialize(
-            $file eq '-' ? do { local $/ = <STDIN> } 
+            $file =~ /^-/ ? do { local $/ = <STDIN> }
           : ref $file eq 'SCALAR' ? $$file
-          : $file->$method, 
+          : $file->$method,
             $options
         );
     }
@@ -157,7 +157,7 @@ sub _serializer {
     my $serializers = $options->{serializers} || [ __PACKAGE__->_all_operative_serializers ];
     s/^\+/File::Serialize::Serializer::/ for @$serializers;
 
-    my $format = $options->{format} || ( $self->basename =~ /\.(\w+)$/ )[0];
+    my $format = $options->{format} || ( ( ref $self ? $self->basename : $self ) =~ /\.(\w+)$/ )[0];
 
     return( first { $_->does_extension($format) } @$serializers
             or die "no serializer found for $format"
