@@ -8,3 +8,4 @@ t/corpus/time.yml
 t/corpus/time.xml
 t/corpus/time.pl
 tags
+t/corpus/time.json5
