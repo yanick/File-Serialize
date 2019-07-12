@@ -18,6 +18,7 @@ for my $serializer (
         YAML::Tiny
         YAML::XS
         Data::Dumper
+        JSON5
     /
 ) {
     subtest $serializer => sub {
