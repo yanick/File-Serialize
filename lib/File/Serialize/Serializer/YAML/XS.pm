@@ -47,4 +47,8 @@ L<YAML::XS>
 
 none
 
+If you have problems with utf8, pass the option C<<utf => 0>>
+to C<serialize_file>/C<deserialize_file>. Or if you use C<transerialize>,
+pass C<utf8=0> as the first argument.
+
 =back
