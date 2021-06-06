@@ -43,5 +43,6 @@ t/json-allow-non-ref.t
 t/precedence.t
 t/serializer.t
 t/transerialize.t
+t/utf8-yaml.t
 t/utf8.t
 xt/release/unused-vars.t

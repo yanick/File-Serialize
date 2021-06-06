@@ -4,6 +4,7 @@ Revision history for File-Serialize
   [ API CHANGES ]
 
   [ BUG FIXES ]
+  - Mention YAML::XS and potential utf8 snag.
 
   [ DOCUMENTATION ]
 
