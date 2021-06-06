@@ -9,6 +9,7 @@ Revision history for File-Serialize
   [ DOCUMENTATION ]
 
   [ ENHANCEMENTS ]
+  - Add a Markdown serializer.
 
   [ NEW FEATURES ]
 

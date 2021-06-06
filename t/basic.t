@@ -19,6 +19,7 @@ for my $serializer (
         YAML::XS
         Data::Dumper
         JSON5
+        Markdown
     /
 ) {
     subtest $serializer => sub {

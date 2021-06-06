@@ -2,10 +2,5 @@
 .build
 File-Serialize-*
 t/corpus/add_ext.yml
-t/corpus/time.json
-t/corpus/time.toml
-t/corpus/time.yml
-t/corpus/time.xml
-t/corpus/time.pl
+t/corpus/time.*
 tags
-t/corpus/time.json5
