@@ -6,8 +6,10 @@ Revision history for File-Serialize
  [BUG FIXES]
 
  [DOCUMENTATION]
+ - Mention Markdown serializer in the main documentation.
 
  [ENHANCEMENTS]
+ - transerialize intermediary steps stuff. Lots of it.
 
  [NEW FEATURES]
 

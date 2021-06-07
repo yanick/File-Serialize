@@ -60,6 +60,10 @@ L<File::Serialize::Serializer::XML::Simple>
 
 L<File::Serialize::Serializer::JSONY>
 
+=item Markdown
+
+L<File::Serialize::Serializer::Markdown>
+
 =back
 
 =head1 OPTIONS
@@ -187,6 +191,12 @@ and the transformed data is going to be whatever the sub returns.
         => sub($inventory) { +{ pairmap  { $a => $b->{price} } %$inventory } }
         => sub($inventory) { +{ pairgrep { $b <= 20 }          %$inventory } }
         => 'inexpensive.json';
+
+
+If you prefer to have your transform functions modify the structure in-place
+in C<$_> and don't want to have to explicitly return it, you can set
+the global variable C<$File::Serialize::implicit_transform> to C<true>.
+WARNING: this changes the behavior of ALL transforms.
 
 =item \%destinations
 

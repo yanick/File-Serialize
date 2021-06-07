@@ -23,6 +23,8 @@ use parent 'Exporter::Tiny';
 
 our @EXPORT = qw/ serialize_file deserialize_file transerialize_file /;
 
+our $implicit_transform;
+
 sub _generate_serialize_file {
     my( undef, undef, undef, $global )= @_;
 
@@ -102,8 +104,13 @@ sub _generate_transerialize_file {
         while( my $step = shift @chain) {
             if ( ref $step eq 'CODE' ) {
                 local $_ = $data;
+                if( $implicit_transform  ) {
+                    $step->($data);
+                    $data = $_;
+                }
+                else {
                 $data = $step->($data);
-            }
+            }}
             elsif ( ref $step eq 'ARRAY' ) {
                 die "subranch step can only be the last step of the chain"
                     if @chain;
