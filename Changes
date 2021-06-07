@@ -6,14 +6,22 @@ Revision history for File-Serialize
  [BUG FIXES]
 
  [DOCUMENTATION]
+
+ [ENHANCEMENTS]
+
+ [NEW FEATURES]
+
+ [STATISTICS]
+
+1.5.0 2021-06-07
+ [DOCUMENTATION]
  - Mention Markdown serializer in the main documentation.
 
  [ENHANCEMENTS]
  - transerialize intermediary steps stuff. Lots of it.
 
- [NEW FEATURES]
-
  [STATISTICS]
+ - code churn: 4 files changed, 165 insertions(+), 80 deletions(-)
 
 1.4.0 2021-06-06
  [BUG FIXES]
