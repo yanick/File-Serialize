@@ -60,6 +60,10 @@ L<File::Serialize::Serializer::XML::Simple>
 
 L<File::Serialize::Serializer::JSONY>
 
+=item Markdown
+
+L<File::Serialize::Serializer::Markdown>
+
 =back
 
 =head1 OPTIONS
