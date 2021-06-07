@@ -20,7 +20,7 @@ package File::Serialize::transerialize;
 
 =head1 DESCRIPTION
 
-C<transerialize> is a command-line interface to the 
+C<transerialize> is a command-line interface to the
 L<File::Serialize> function of the same name.
 
 The command behaves pretty much like its underlying function, except
@@ -28,8 +28,8 @@ for the details below.
 
 =head2 Default options
 
-All leading arguments containing an '=' 
-will be considered default options. In other words, 
+All leading arguments containing an '='
+will be considered default options. In other words,
 
     $ transerialize pretty=1 format=json foo bar
 
@@ -43,6 +43,43 @@ is equivalent to the script
 
 Any argument that begin with a '{', '[' or 'sub {' will be
 eval'ed (as opposed as being considered filenames).
+
+=head2 Intermediary steps
+
+Any intermediary step that doesn't look like code (as specified
+in the previous section) is doing to be interpreted as a Perl
+script returning a transformation function.
+
+For example, you could grab the title of a blog entry and put it
+in the frontmatter via:
+
+    $ transerialize ./README.md ./set_front_title.pl -.json
+
+with F<./set_front_title.pl> looking like:
+
+
+    sub {
+        return $_ if $_->{title};
+
+        $_->{title} = $1 if $_->{_content} =~ /^# (.*)/m;
+
+        return $_;
+    }
+
+=head2 Loading intermediary steps from file
+
+Any of the argument passed to C<transerialize> that has a leading
+C<@> is considered a serialized file containing a list of files
+and will be expanded. Useful if you do have a lot of intermediary steps and the command line is getting ungainly long.
+
+For example, you could have
+
+    # file ./process_blog.yml
+    - set_front_title.pl
+    - gather_tags.pl
+
+    $ transerialize README.md @./process_blog.pl -.json
+
 
 =head2 STDIN and STDOUT
 
@@ -60,7 +97,12 @@ will be printed on STDOUT. For example
     $ transerialize_file foo.yaml -.json
 
 will print out the data of F<foo.yaml> as JSON.
-    
+
+=head2 Accessing source and destination files
+
+The original source and destination files are available to
+transformation scripts via the global variables
+C<$File::Serialize::SOURCE> and C<$File::Serialize::DESTINATION>.
 
 =cut
 
@@ -89,6 +131,10 @@ my $codish = qr/
     )
 /x;
 
+@ARGV = map {
+    s/^\@// ? deserialize_file($_)->@* : $_
+} @ARGV;
+
 for ( grep { $_ =~ $codish }  @ARGV ) {
     $_ = eval $_ or die $@;
 }
@@ -97,6 +143,18 @@ for( grep { /^-\.\w+$/ } @ARGV ) {
     $_ = { split '\.', $_, 2 };
 }
 
-transerialize_file @ARGV;
+my $source = shift;
+my $destination = pop;
+
+{ no warnings;
+$File::Serialize::SOURCE = $source;
+$File::Serialize::DESTINATION = $destination;
+}
+
+for ( grep { !ref } @ARGV ) {
+    $_ = do $_;
+}
+
+transerialize_file $source, @ARGV, $destination;
 
 __END__

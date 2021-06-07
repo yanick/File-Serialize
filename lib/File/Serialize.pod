@@ -192,6 +192,12 @@ and the transformed data is going to be whatever the sub returns.
         => sub($inventory) { +{ pairgrep { $b <= 20 }          %$inventory } }
         => 'inexpensive.json';
 
+
+If you prefer to have your transform functions modify the structure in-place
+in C<$_> and don't want to have to explicitly return it, you can set
+the global variable C<$File::Serialize::implicit_transform> to C<true>.
+WARNING: this changes the behavior of ALL transforms.
+
 =item \%destinations
 
 A hashref of destination file with their options. The current state of the data will
