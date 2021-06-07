@@ -1,6 +1,7 @@
 package File::Serialize::Serializer::JSON5;
+our $AUTHORITY = 'cpan:YANICK';
 #ABSTRACT: JSON5 serializer for File::Serialize
-
+$File::Serialize::Serializer::JSON5::VERSION = '1.5.0';
 use strict;
 use warnings;
 
@@ -25,6 +26,18 @@ sub deserialize {
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+File::Serialize::Serializer::JSON5 - JSON5 serializer for File::Serialize
+
+=head1 VERSION
+
+version 1.5.0
+
 =head1 DESCRIPTION
 
 =over
@@ -37,7 +50,6 @@ C<json5>.
 
 100
 
-
 =item B<module used>
 
 L<JSON5>, L<JSON::MaybeXS>
@@ -47,3 +59,16 @@ L<JSON5>, L<JSON::MaybeXS>
 pretty (default: true), canonical (default: true), allow_nonref (default: true)
 
 =back
+
+=head1 AUTHOR
+
+Yanick Champoux <yanick@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2021, 2019, 2017, 2016, 2015 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut
