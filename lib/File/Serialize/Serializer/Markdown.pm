@@ -4,6 +4,8 @@ package File::Serialize::Serializer::Markdown;
 use strict;
 use warnings;
 
+use Module::Runtime qw/ use_module /;
+
 use File::Serialize qw/ deserialize_file serialize_file /;
 use Moo;
 with 'File::Serialize::Serializer';
@@ -11,6 +13,10 @@ with 'File::Serialize::Serializer';
 sub required_modules { return qw//; }
 
 sub extensions { qw/ md markdown / };
+
+sub is_operative {
+    return !! grep { use_module("File::Serialize::Serializer::YAML::$_")->is_operative } qw/ XS /;
+}
 
 sub serialize {
     my( $self, $data, $options ) = @_;
