@@ -1,7 +1,91 @@
 package File::Serialize::Serializer;
+our $AUTHORITY = 'cpan:YANICK';
 # ABSTRACT: Role for defining File::Serialize serializers
+$File::Serialize::Serializer::VERSION = '1.5.1';
 
-=head1  SYNOPSIS
+use strict;
+use warnings;
+
+use List::MoreUtils qw/ any all /;
+use Module::Info;
+use Module::Runtime qw/ use_module /;
+
+use Role::Tiny;
+
+requires 'extensions';  # first extension is the canonical one
+
+requires 'serialize', 'deserialize';
+
+sub precedence { 100 }
+
+sub required_modules {
+    my $package = shift;
+    $package =~ s/^File::Serialize::Serializer:://r;
+}
+
+sub extension { ($_[0]->extensions)[0] }
+
+sub does_extension {
+   my( $self, $ext ) = @_;
+   return unless $ext;
+   return any { $_ eq $ext } $self->extensions;
+}
+
+sub is_operative {
+    return 1 unless $_[0]->required_modules;
+    all { Module::Info->new_from_module($_) } $_[0]->required_modules;
+}
+
+sub groom_serialize_options {
+    my $self = shift;
+    $self->groom_options(@_);
+}
+
+sub groom_deserialize_options {
+    my $self = shift;
+    $self->groom_options(@_);
+}
+
+sub groom_options {
+    my $self = shift;
+    @_;
+}
+
+before serialize => \&init;
+before deserialize => \&init;
+
+around serialize => sub {
+    my( $orig, $self, $data, $options ) = @_;
+    $orig->( $self, $data, $self->groom_serialize_options($options) );
+};
+
+around deserialize => sub {
+    my( $orig, $self, $data, $options ) = @_;
+    $orig->( $self, $data, $self->groom_deserialize_options($options) );
+};
+
+sub init {
+    my $self = shift;
+    use_module($_) for $self->required_modules;
+}
+
+1;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+File::Serialize::Serializer - Role for defining File::Serialize serializers
+
+=head1 VERSION
+
+version 1.5.1
+
+=head1 SYNOPSIS
 
     package File::Serialize::Serializer::MySerializer;
 
@@ -75,7 +159,7 @@ provided, C<groom_options> is used.
 
 =back
 
-=head2  Provided methods
+=head2 Provided methods
 
 The role provides the following attributes / methods:
 
@@ -88,73 +172,15 @@ serializer for a format to use. Default to C<100>. A value of C<0> means "don't 
 
 =back
 
+=head1 AUTHOR
+
+Yanick Champoux <yanick@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2021, 2019, 2017, 2016, 2015 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
-
-use strict;
-use warnings;
-
-use List::MoreUtils qw/ any all /;
-use Module::Info;
-use Module::Runtime qw/ use_module /;
-
-use Role::Tiny;
-
-requires 'extensions';  # first extension is the canonical one
-
-requires 'serialize', 'deserialize';
-
-sub precedence { 100 }
-
-sub required_modules {
-    my $package = shift;
-    $package =~ s/^File::Serialize::Serializer:://r;
-}
-
-sub extension { ($_[0]->extensions)[0] }
-
-sub does_extension {
-   my( $self, $ext ) = @_;
-   return unless $ext;
-   return any { $_ eq $ext } $self->extensions;
-}
-
-sub is_operative {
-    return 1 unless $_[0]->required_modules;
-    all { Module::Info->new_from_module($_) } $_[0]->required_modules;
-}
-
-sub groom_serialize_options {
-    my $self = shift;
-    $self->groom_options(@_);
-}
-
-sub groom_deserialize_options {
-    my $self = shift;
-    $self->groom_options(@_);
-}
-
-sub groom_options {
-    my $self = shift;
-    @_;
-}
-
-before serialize => \&init;
-before deserialize => \&init;
-
-around serialize => sub {
-    my( $orig, $self, $data, $options ) = @_;
-    $orig->( $self, $data, $self->groom_serialize_options($options) );
-};
-
-around deserialize => sub {
-    my( $orig, $self, $data, $options ) = @_;
-    $orig->( $self, $data, $self->groom_deserialize_options($options) );
-};
-
-sub init {
-    my $self = shift;
-    use_module($_) for $self->required_modules;
-}
-
-1;

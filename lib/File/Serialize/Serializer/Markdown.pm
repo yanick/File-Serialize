@@ -1,5 +1,6 @@
 package File::Serialize::Serializer::Markdown;
-
+our $AUTHORITY = 'cpan:YANICK';
+$File::Serialize::Serializer::Markdown::VERSION = '1.5.1';
 #ABSTRACT: Markdown (with frontmatter) serializer for File::Serialize
 
 use strict;
@@ -56,6 +57,18 @@ sub deserialize {
 
 __END__
 
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+File::Serialize::Serializer::Markdown - Markdown (with frontmatter) serializer for File::Serialize
+
+=head1 VERSION
+
+version 1.5.1
+
 =head1 DESCRIPTION
 
 Converts Markdown files with YAML frontmatter. This is a file format that looks like
@@ -73,7 +86,6 @@ Converts Markdown files with YAML frontmatter. This is a file format that looks 
 
     Blah blah blah...
 
-
 The markdown content of the file is assigned the key C<_content>.
 
 =over
@@ -86,7 +98,6 @@ C<md>
 
 100
 
-
 =item B<module used>
 
 L<TOML>
@@ -96,3 +107,16 @@ L<TOML>
 None
 
 =back
+
+=head1 AUTHOR
+
+Yanick Champoux <yanick@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2021, 2019, 2017, 2016, 2015 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
+=cut

@@ -2,7 +2,74 @@
 #PODNAME: transerialize
 
 package File::Serialize::transerialize;
+our $AUTHORITY = 'cpan:YANICK';
 #ABSTRACT: transerialize files from a format to a different one
+$File::Serialize::transerialize::VERSION = '1.5.1';
+
+use strict;
+use warnings;
+
+my %args;
+
+BEGIN {
+    while( $ARGV[0] =~ /=/ ) {
+        my ($k,$v) = split '=', shift @ARGV;
+        $args{$k} = $v;
+    }
+
+    if ( $ARGV[0] =~ s/(?<=^-)\.(?<format>\w+)$// ) {
+        $args{format} = $+{format};
+    }
+}
+
+use File::Serialize \%args;
+
+my $codish = qr/
+    ^(?:
+         [ \[\{ ]    # [ .. ] or { ... }
+       | sub \s* \{  # or a sub
+    )
+/x;
+
+@ARGV = map {
+    s/^\@// ? deserialize_file($_)->@* : $_
+} @ARGV;
+
+for ( grep { $_ =~ $codish }  @ARGV ) {
+    $_ = eval $_ or die $@;
+}
+
+for( grep { /^-\.\w+$/ } @ARGV ) {
+    $_ = { split '\.', $_, 2 };
+}
+
+my $source = shift;
+my $destination = pop;
+
+{ no warnings;
+$File::Serialize::SOURCE = $source;
+$File::Serialize::DESTINATION = $destination;
+}
+
+for ( grep { !ref } @ARGV ) {
+    $_ = do $_;
+}
+
+transerialize_file $source, @ARGV, $destination;
+
+__END__
+
+=pod
+
+=encoding UTF-8
+
+=head1 NAME
+
+transerialize - transerialize files from a format to a different one
+
+=head1 VERSION
+
+version 1.5.1
 
 =head1 SYNOPSIS
 
@@ -57,7 +124,6 @@ in the frontmatter via:
 
 with F<./set_front_title.pl> looking like:
 
-
     sub {
         return $_ if $_->{title};
 
@@ -79,7 +145,6 @@ For example, you could have
     - gather_tags.pl
 
     $ transerialize README.md @./process_blog.pl -.json
-
 
 =head2 STDIN and STDOUT
 
@@ -104,57 +169,15 @@ The original source and destination files are available to
 transformation scripts via the global variables
 C<$File::Serialize::SOURCE> and C<$File::Serialize::DESTINATION>.
 
+=head1 AUTHOR
+
+Yanick Champoux <yanick@cpan.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is copyright (c) 2021, 2019, 2017, 2016, 2015 by Yanick Champoux.
+
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
+
 =cut
-
-use strict;
-use warnings;
-
-my %args;
-
-BEGIN {
-    while( $ARGV[0] =~ /=/ ) {
-        my ($k,$v) = split '=', shift @ARGV;
-        $args{$k} = $v;
-    }
-
-    if ( $ARGV[0] =~ s/(?<=^-)\.(?<format>\w+)$// ) {
-        $args{format} = $+{format};
-    }
-}
-
-use File::Serialize \%args;
-
-my $codish = qr/
-    ^(?:
-         [ \[\{ ]    # [ .. ] or { ... }
-       | sub \s* \{  # or a sub
-    )
-/x;
-
-@ARGV = map {
-    s/^\@// ? deserialize_file($_)->@* : $_
-} @ARGV;
-
-for ( grep { $_ =~ $codish }  @ARGV ) {
-    $_ = eval $_ or die $@;
-}
-
-for( grep { /^-\.\w+$/ } @ARGV ) {
-    $_ = { split '\.', $_, 2 };
-}
-
-my $source = shift;
-my $destination = pop;
-
-{ no warnings;
-$File::Serialize::SOURCE = $source;
-$File::Serialize::DESTINATION = $destination;
-}
-
-for ( grep { !ref } @ARGV ) {
-    $_ = do $_;
-}
-
-transerialize_file $source, @ARGV, $destination;
-
-__END__
