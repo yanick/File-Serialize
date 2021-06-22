@@ -4,6 +4,7 @@ Revision history for File-Serialize
  [API CHANGES]
 
  [BUG FIXES]
+ - Make the Markdown parser depends on the presence of the YAML parser.
 
  [DOCUMENTATION]
 
